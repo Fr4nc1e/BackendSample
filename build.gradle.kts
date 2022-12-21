@@ -50,7 +50,7 @@ dependencies {
     // Test dependencies
 
     // Gson
-    testImplementation("com.google.code.gson:gson:2.8.8")
+    testImplementation("com.google.code.gson:gson:2.10")
     // Koin
     testImplementation("io.insert-koin:koin-test:$koin_version")
     // Truth
