@@ -2,13 +2,15 @@ package com.sample.routes
 
 import com.sample.data.requests.CreatePostRequest
 import com.sample.data.responses.BasicApiResponse
+import com.sample.routes.util.ifEmailBelongsToUser
 import com.sample.service.PostService
 import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages
+import com.sample.util.Constants
+import com.sample.util.QueryParams
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -26,38 +28,61 @@ fun Route.createPostRoute(
                 return@post
             }
 
-            val email = call.principal<JWTPrincipal>()?.getClaim(
-                "email", String::class
-            )
-            val isEmailByUser = userService.doesEmailBelongToUserId(
-                email = email ?: "",
-                userId = request.userId
-            )
-            if (!isEmailByUser) {
-                call.respond(
-                    HttpStatusCode.Unauthorized,
-                    ApiResponseMessages.UNAUTHORIZED
-                )
-                return@post
+            ifEmailBelongsToUser(
+                userId = request.userId,
+                validateEmail = userService::doesEmailBelongToUserId
+            ) {
+                val didUserExist = postService.createPostIfUserExists(request)
+
+                if (!didUserExist) {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse(
+                            successful = false,
+                            message = ApiResponseMessages.USER_NOT_FOUND
+                        )
+                    )
+                } else {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse(
+                            successful = true,
+                            message = ApiResponseMessages.CREATE_POST_SUCCESSFULLY
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+fun Route.getPostForFollows(
+    postService: PostService,
+    userService: UserService
+) {
+    authenticate {
+        get {
+            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
             }
 
-            val didUserExist = postService.createPostIfUserExists(request)
+            val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
+            val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
+                ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
 
-            if (!didUserExist) {
-                call.respond(
-                    HttpStatusCode.OK,
-                    BasicApiResponse(
-                        successful = false,
-                        message = ApiResponseMessages.USER_NOT_FOUND
-                    )
+            ifEmailBelongsToUser(
+                userId = userId,
+                validateEmail = userService::doesEmailBelongToUserId
+            ) {
+                val posts = postService.getPostForFollows(
+                    userId,
+                    page,
+                    pageSize
                 )
-            } else {
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
-                        successful = true,
-                        message = ApiResponseMessages.CREATE_POST_SUCCESSFULLY
-                    )
+                    posts
                 )
             }
         }
