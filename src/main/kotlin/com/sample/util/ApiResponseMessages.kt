@@ -10,4 +10,5 @@ object ApiResponseMessages {
     const val FOLLOW_SUCCESSFULLY = "Follow successfully."
     const val UN_FOLLOW_SUCCESSFULLY = "Unfollow successfully."
     const val CREATE_POST_SUCCESSFULLY = "Create a post Successfully."
+    const val UNAUTHORIZED = "You are not who you say you are."
 }

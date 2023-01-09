@@ -3,6 +3,7 @@ package com.sample.service
 import com.sample.data.models.User
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreateAccountRequest
+import com.sample.data.requests.LoginRequest
 
 class UserService(
     private val repository: UserRepository
@@ -13,6 +14,18 @@ class UserService(
     ): Boolean {
         return repository.getUserByEmail(email) != null
     }
+
+    suspend fun doesEmailBelongToUserId(
+        email: String,
+        userId: String
+    ) = repository.doesEmailBelongToUserId(email, userId)
+
+    suspend fun doesPasswordMatchForUser(
+        request: LoginRequest
+    ) = repository.doesPasswordForUserMatch(
+        email = request.email,
+        enteredPassword = request.password
+    )
 
     suspend fun createUser(
         request: CreateAccountRequest
