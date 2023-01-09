@@ -1,4 +1,4 @@
-package com.sample.util
+package com.sample.data.util
 
 sealed class ActivityType(val type: Int) {
     object LikedPost : ActivityType(0)

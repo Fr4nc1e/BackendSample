@@ -5,8 +5,10 @@ import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreateAccountRequest
 import com.sample.data.requests.LoginRequest
 import com.sample.data.responses.BasicApiResponse
+import com.sample.util.ApiResponseMessages.CREATE_USER_SUCCESSFULLY
 import com.sample.util.ApiResponseMessages.FIELDS_BLANK
 import com.sample.util.ApiResponseMessages.INVALID_CREDENTIALS
+import com.sample.util.ApiResponseMessages.LOGIN_IN_SUCCESSFULLY
 import com.sample.util.ApiResponseMessages.USER_ALREADY_EXISTS
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -58,7 +60,10 @@ fun Route.createUserRoute(
                 )
             )
             call.respond(
-                BasicApiResponse(successful = true)
+                BasicApiResponse(
+                    successful = true,
+                    message = CREATE_USER_SUCCESSFULLY
+                )
             )
         }
     }
@@ -85,7 +90,8 @@ fun Route.loginUser(userRepository: UserRepository) {
             call.respond(
                 HttpStatusCode.OK,
                 BasicApiResponse(
-                    successful = true
+                    successful = true,
+                    message = LOGIN_IN_SUCCESSFULLY
                 )
             )
         } else {

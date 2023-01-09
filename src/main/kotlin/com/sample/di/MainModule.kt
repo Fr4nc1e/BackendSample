@@ -1,5 +1,7 @@
 package com.sample.di
 
+import com.sample.data.repository.follow.FollowRepository
+import com.sample.data.repository.follow.FollowRepositoryImpl
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.repository.user.UserRepositoryImpl
 import com.sample.util.Constants
@@ -17,5 +19,8 @@ val mainModule = module {
 
     single<UserRepository> {
         UserRepositoryImpl(get())
+    }
+    single<FollowRepository> {
+        FollowRepositoryImpl(get())
     }
 }

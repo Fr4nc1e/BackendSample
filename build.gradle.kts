@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -24,18 +26,17 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-cors-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-default-headers-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-call-logging-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-core-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-auth-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-websockets-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-cors-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-default-headers-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-call-logging-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-netty-jvm:2.2.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     // KMongo
@@ -55,4 +56,14 @@ dependencies {
     testImplementation("io.insert-koin:koin-test:$koin_version")
     // Truth
     testImplementation("com.google.truth:truth:1.1.3")
+    implementation(kotlin("stdlib-jdk8"))
+    testImplementation("io.ktor:ktor-server-tests-jvm:2.2.2")
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }

@@ -9,7 +9,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.websocket.*
-import io.ktor.websocket.*
+import io.ktor.server.websocket.*
 import java.time.Duration
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
@@ -25,6 +25,7 @@ import io.ktor.client.statement.*
 import kotlin.test.*
 import io.ktor.server.testing.*
 import com.sample.plugins.*
+import io.ktor.client.call.body
 
 class ApplicationTest {
     @Test
