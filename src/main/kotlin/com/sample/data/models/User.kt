@@ -10,8 +10,8 @@ data class User(
     val profileImageUrl: String,
     val bio: String,
     val gitHubUrl: String?,
-    val instagramUrl: String?,
-    val linkedInUrl: String?,
+    val qqUrl: String?,
+    val weChatUrl: String?,
     val skills: List<String> = listOf(),
     @BsonId
     val id: String = ObjectId().toString(),

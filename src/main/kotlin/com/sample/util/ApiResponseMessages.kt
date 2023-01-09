@@ -9,4 +9,5 @@ object ApiResponseMessages {
     const val USER_NOT_FOUND = "The user couldn't be found."
     const val FOLLOW_SUCCESSFULLY = "Follow successfully."
     const val UN_FOLLOW_SUCCESSFULLY = "Unfollow successfully."
+    const val CREATE_POST_SUCCESSFULLY = "Create a post Successfully."
 }

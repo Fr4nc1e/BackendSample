@@ -1,10 +1,10 @@
 package com.sample.routes
 
-import com.sample.data.models.User
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreateAccountRequest
 import com.sample.data.requests.LoginRequest
 import com.sample.data.responses.BasicApiResponse
+import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages.CREATE_USER_SUCCESSFULLY
 import com.sample.util.ApiResponseMessages.FIELDS_BLANK
 import com.sample.util.ApiResponseMessages.INVALID_CREDENTIALS
@@ -17,7 +17,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.createUserRoute(
-    userRepository: UserRepository
+    userService: UserService
 ) {
     route("/api/user/create") {
         post {
@@ -26,7 +26,7 @@ fun Route.createUserRoute(
                 return@post
             }
 
-            val userExists = userRepository.getUserByEmail(request.email) != null
+            val userExists = userService.doesUserWithEmailExist(request.email)
             if (userExists) {
                 call.respond(
                     BasicApiResponse(
@@ -47,24 +47,28 @@ fun Route.createUserRoute(
                 return@post
             }
 
-            userRepository.createUser(
-                User(
-                    email = request.email,
-                    username = request.username,
-                    password = request.password,
-                    profileImageUrl = "",
-                    bio = "",
-                    gitHubUrl = null,
-                    instagramUrl = null,
-                    linkedInUrl = null
-                )
-            )
-            call.respond(
-                BasicApiResponse(
-                    successful = true,
-                    message = CREATE_USER_SUCCESSFULLY
-                )
-            )
+            when (userService.validateCreateAccountRequest(request)) {
+                is UserService.ValidationEvent.ErrorFieldEmpty -> {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse(
+                            successful = false,
+                            message = FIELDS_BLANK
+                        )
+                    )
+                }
+
+                is UserService.ValidationEvent.Success -> {
+                    userService.createUser(request)
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse(
+                            successful = true,
+                            message = CREATE_USER_SUCCESSFULLY
+                        )
+                    )
+                }
+            }
         }
     }
 }

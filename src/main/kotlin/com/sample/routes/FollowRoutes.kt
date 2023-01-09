@@ -1,8 +1,8 @@
 package com.sample.routes
 
-import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.requests.FollowUpdateRequest
 import com.sample.data.responses.BasicApiResponse
+import com.sample.service.FollowService
 import com.sample.util.ApiResponseMessages
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -11,7 +11,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.followUser(
-    followRepository: FollowRepository
+    followService: FollowService
 ) {
     post("/api/following/follow") {
         val request = call.receiveNullable<FollowUpdateRequest>() ?: kotlin.run {
@@ -19,10 +19,7 @@ fun Route.followUser(
             return@post
         }
 
-        val didUserExist = followRepository.followUserIfExists(
-            followingUserId = request.followingUserId,
-            followedUserId = request.followedUserId
-        )
+        val didUserExist = followService.followUserIfExists(request)
 
         if (didUserExist) {
             call.respond(
@@ -45,7 +42,7 @@ fun Route.followUser(
 }
 
 fun Route.unFollowUser(
-    followRepository: FollowRepository
+    followService: FollowService
 ) {
     delete("/api/following/unfollow") {
         val request = call.receiveNullable<FollowUpdateRequest>() ?: kotlin.run {
@@ -53,10 +50,7 @@ fun Route.unFollowUser(
             return@delete
         }
 
-        val didUserExist = followRepository.unfollowUserIfExists(
-            followingUserId = request.followingUserId,
-            followedUserId = request.followedUserId
-        )
+        val didUserExist = followService.unfollowUserIfExists(request)
 
         if (didUserExist) {
             call.respond(
