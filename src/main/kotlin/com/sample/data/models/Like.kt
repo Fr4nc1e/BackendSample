@@ -8,6 +8,7 @@ import org.bson.types.ObjectId
 data class Like(
     val userId: String,
     val parentId: String,
+    val timeStamp: Long,
     @BsonId
     val id: String = ObjectId().toString()
 )

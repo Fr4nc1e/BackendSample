@@ -8,16 +8,18 @@ class FollowService(
 ) {
 
     suspend fun followUserIfExists(
-        request: FollowUpdateRequest
+        request: FollowUpdateRequest,
+        followingUserId: String
     ) = repository.followUserIfExists(
-        followingUserId = request.followingUserId,
+        followingUserId = followingUserId,
         followedUserId = request.followedUserId
     )
 
     suspend fun unfollowUserIfExists(
-        request: FollowUpdateRequest
+        request: FollowUpdateRequest,
+        followingUserId: String
     ) = repository.unfollowUserIfExists(
-        followingUserId = request.followingUserId,
+        followingUserId = followingUserId,
         followedUserId = request.followedUserId
     )
 }

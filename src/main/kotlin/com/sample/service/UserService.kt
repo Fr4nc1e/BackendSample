@@ -20,6 +20,14 @@ class UserService(
         userId: String
     ) = repository.doesEmailBelongToUserId(email, userId)
 
+    suspend fun getUserByEmail(email: String): User? {
+        return repository.getUserByEmail(email)
+    }
+
+    fun isValidpassword(enteredPassword: String, actualPassword: String): Boolean {
+        return enteredPassword == actualPassword
+    }
+
     suspend fun doesPasswordMatchForUser(
         request: LoginRequest
     ) = repository.doesPasswordForUserMatch(

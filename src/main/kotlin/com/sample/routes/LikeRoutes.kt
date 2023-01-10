@@ -2,9 +2,8 @@ package com.sample.routes
 
 import com.sample.data.requests.LikeUpdateRequest
 import com.sample.data.responses.BasicApiResponse
-import com.sample.routes.util.ifEmailBelongsToUser
+import com.sample.routes.util.userId
 import com.sample.service.LikeService
-import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,18 +13,16 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.likeParent(
-    likeService: LikeService,
-    userService: UserService
+    likeService: LikeService
 ) {
-    authenticate { post("/api/like") { val request = call.receiveNullable<LikeUpdateRequest>() ?: kotlin.run { call.respond(HttpStatusCode.BadRequest)
+    authenticate {
+        post("/api/like") {
+            val request = call.receiveNullable<LikeUpdateRequest>() ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
         return@post
     }
-        ifEmailBelongsToUser(
-            userId = request.userId,
-            validateEmail = userService::doesEmailBelongToUserId
-        ) {
             val likeSuccessful = likeService.likeParent(
-                userId = request.userId,
+                userId = call.userId,
                 parentId = request.parentId
             )
             if (likeSuccessful) {
@@ -48,22 +45,19 @@ fun Route.likeParent(
         }
     }
     }
-}
 
 fun Route.unlikeParent(
-    userService: UserService,
     likeService: LikeService
 ) {
-    authenticate { delete("/api/unlike") { val request = call.receiveNullable<LikeUpdateRequest>() ?: kotlin.run { call.respond(HttpStatusCode.BadRequest)
+    authenticate {
+        delete("/api/unlike") {
+            val request = call.receiveNullable<LikeUpdateRequest>() ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
         return@delete
     }
 
-        ifEmailBelongsToUser(
-            request.userId,
-            validateEmail = userService::doesEmailBelongToUserId
-        ) {
             val unlikeParentSuccessful = likeService.unlikeParent(
-                userId = request.userId,
+                userId = call.userId,
                 parentId = request.parentId
             )
             if (unlikeParentSuccessful) {
@@ -86,4 +80,3 @@ fun Route.unlikeParent(
         }
     }
     }
-}

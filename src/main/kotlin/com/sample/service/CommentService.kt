@@ -11,10 +11,11 @@ class CommentService(
 ) {
 
     suspend fun createComment(
-        request: CreateCommentRequest
+        request: CreateCommentRequest,
+        userId: String
     ): ValidationEvent {
         request.apply {
-            if (comment.isBlank() || userId.isBlank() || postId.isBlank()) {
+            if (comment.isBlank() || postId.isBlank()) {
                 return ValidationEvent.ErrorFieldEmpty
             }
             if (comment.length > Constants.MAX_COMMENT_LENGTH) {
@@ -25,7 +26,7 @@ class CommentService(
         repository.createComment(
             Comment(
                 comment = request.comment,
-                userId = request.userId,
+                userId = userId,
                 postId = request.postId,
                 timestamp = System.currentTimeMillis()
             )
@@ -47,7 +48,7 @@ class CommentService(
         return repository.getCommentedPostForUser(userId)
     }
 
-    suspend fun getComment(commentId: String) =
+    suspend fun getCommentById(commentId: String) =
         repository.getComment(commentId)
 
     sealed class ValidationEvent {

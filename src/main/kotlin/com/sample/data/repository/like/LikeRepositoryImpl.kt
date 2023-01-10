@@ -20,6 +20,7 @@ class LikeRepositoryImpl(
                 Like(
                     userId = userId,
                     parentId = parentId,
+                    timeStamp = System.currentTimeMillis()
                 )
             )
             true
@@ -50,6 +51,9 @@ class LikeRepositoryImpl(
             Like::userId eq userId
         )
             .toList()
+            .sortedBy {
+                it.timeStamp
+            }
             .map {
                 it.parentId
             }

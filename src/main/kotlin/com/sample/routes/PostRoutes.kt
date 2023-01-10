@@ -3,10 +3,9 @@ package com.sample.routes
 import com.sample.data.requests.CreatePostRequest
 import com.sample.data.requests.DeletePostRequest
 import com.sample.data.responses.BasicApiResponse
-import com.sample.routes.util.ifEmailBelongsToUser
+import com.sample.routes.util.userId
 import com.sample.service.LikeService
 import com.sample.service.PostService
-import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages
 import com.sample.util.Constants
 import com.sample.util.QueryParams
@@ -18,8 +17,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.createPost(
-    postService: PostService,
-    userService: UserService
+    postService: PostService
 ) {
     authenticate {
         post("/api/post/create") {
@@ -30,11 +28,11 @@ fun Route.createPost(
                 return@post
             }
 
-            ifEmailBelongsToUser(
-                userId = request.userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
-                val didUserExist = postService.createPostIfUserExists(request)
+            val userId = call.userId
+            val didUserExist = postService.createPostIfUserExists(
+                request = request,
+                userId = userId
+            )
 
                 if (!didUserExist) {
                     call.respond(
@@ -56,32 +54,17 @@ fun Route.createPost(
             }
         }
     }
-}
 
 fun Route.getPostForFollows(
-    postService: PostService,
-    userService: UserService
+    postService: PostService
 ) {
     authenticate {
         get("/api/post/follow/get") {
-            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
-
             val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
             val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
                 ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
 
-            ifEmailBelongsToUser(
-                userId = userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
-                val posts = postService.getPostForFollows(
-                    userId,
-                    page,
-                    pageSize
-                )
+            val posts = postService.getPostForFollows(call.userId, page, pageSize)
                 call.respond(
                     HttpStatusCode.OK,
                     posts
@@ -89,29 +72,18 @@ fun Route.getPostForFollows(
             }
         }
     }
-}
 
 fun Route.getPostByLikes(
-    userService: UserService,
     postService: PostService,
     likeService: LikeService
 ) {
     authenticate {
         get("/api/post/like/get") {
-            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
-
             val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
             val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
                 ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
 
-            ifEmailBelongsToUser(
-                userId = userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
-                val parentIdList = likeService.getLikeEntityForUser(userId)
+                val parentIdList = likeService.getLikeEntityForUser(call.userId)
                 val posts = postService.getPostByLike(parentIdList)
 
                 call.respond(
@@ -121,11 +93,9 @@ fun Route.getPostByLikes(
             }
         }
     }
-}
 
 fun Route.deletePost(
     postService: PostService,
-    userService: UserService,
     likeService: LikeService
 ) {
     authenticate {
@@ -141,10 +111,7 @@ fun Route.deletePost(
                 return@delete
             }
 
-            ifEmailBelongsToUser(
-                userId = post.userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
+            if (post.userId == call.userId) {
                 postService.deletePost(postId = request.postId)
                 likeService.deleteLikesForParent(parentId = request.postId)
                 call.respond(
@@ -154,7 +121,9 @@ fun Route.deletePost(
                         message = ApiResponseMessages.DELETE_POST_SUCCESSFULLY
                     )
                 )
+            } else {
+                call.respond(HttpStatusCode.Unauthorized)
+            }
             }
         }
     }
-}

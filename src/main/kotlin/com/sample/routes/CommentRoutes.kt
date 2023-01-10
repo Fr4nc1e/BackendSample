@@ -3,10 +3,9 @@ package com.sample.routes
 import com.sample.data.requests.CreateCommentRequest
 import com.sample.data.requests.DeleteCommentRequest
 import com.sample.data.responses.BasicApiResponse
-import com.sample.routes.util.ifEmailBelongsToUser
+import com.sample.routes.util.userId
 import com.sample.service.CommentService
 import com.sample.service.LikeService
-import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages
 import com.sample.util.QueryParams
 import io.ktor.http.*
@@ -17,8 +16,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.createComment(
-    commentService: CommentService,
-    userService: UserService
+    commentService: CommentService
 ) {
     authenticate {
         post("/api/comment/create") {
@@ -26,12 +24,7 @@ fun Route.createComment(
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
             }
-
-            ifEmailBelongsToUser(
-                userId = request.userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
-                when (commentService.createComment(request)) {
+                when (commentService.createComment(request, call.userId)) {
                     is CommentService.ValidationEvent.ErrorFieldEmpty -> {
                         call.respond(
                             HttpStatusCode.OK,
@@ -60,7 +53,6 @@ fun Route.createComment(
                         )
                     }
                 }
-            }
         }
     }
 }
@@ -85,33 +77,21 @@ fun Route.getCommentsForPost(
 }
 
 fun Route.getCommentedPostsForUser(
-    userService: UserService,
     commentService: CommentService
 ) {
     authenticate {
         get("/api/comment/user/get") {
-            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
-
-            ifEmailBelongsToUser(
-                userId = userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
-                val map = commentService.getCommentedPostForUser(userId)
-                call.respond(
-                    HttpStatusCode.OK,
-                    map
-                )
-            }
+            val map = commentService.getCommentedPostForUser(call.userId)
+            call.respond(
+                HttpStatusCode.OK,
+                map
+            )
         }
     }
 }
 
 fun Route.deleteComment(
     commentService: CommentService,
-    userService: UserService,
     likeService: LikeService
 ) {
     authenticate {
@@ -120,10 +100,12 @@ fun Route.deleteComment(
                 call.respond(HttpStatusCode.BadRequest)
                 return@delete
             }
-            ifEmailBelongsToUser(
-                userId = request.userId,
-                validateEmail = userService::doesEmailBelongToUserId
-            ) {
+
+            val comment = commentService.getCommentById(request.commentId)
+            if (comment?.userId != call.userId) {
+                call.respond(HttpStatusCode.Unauthorized)
+                return@delete
+            }
                 val deleted = commentService.deleteComment(request.commentId)
 
                 if (deleted) {
@@ -144,4 +126,3 @@ fun Route.deleteComment(
             }
         }
     }
-}
