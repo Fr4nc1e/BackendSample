@@ -1,10 +1,7 @@
 package com.sample.plugins
 
 import com.sample.routes.*
-import com.sample.service.FollowService
-import com.sample.service.LikeService
-import com.sample.service.PostService
-import com.sample.service.UserService
+import com.sample.service.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
@@ -14,6 +11,7 @@ fun Application.configureRouting() {
     val followService: FollowService by inject()
     val postService: PostService by inject()
     val likeService: LikeService by inject()
+    val commentService: CommentService by inject()
     val jwtIssuer = environment.config.property("jwt.domain").getString()
     val jwtAudience = environment.config.property("jwt.audience").getString()
     val jwtSecret = environment.config.property("jwt.secret").getString()
@@ -58,6 +56,24 @@ fun Application.configureRouting() {
             userService
         )
         unlikeParent(
+            userService,
+            likeService
+        )
+
+        // Comment Route
+        createComment(
+            commentService,
+            userService
+        )
+        getCommentsForPost(
+            commentService
+        )
+        getCommentedPostsForUser(
+            userService,
+            commentService
+        )
+        deleteComment(
+            commentService,
             userService,
             likeService
         )

@@ -16,4 +16,7 @@ object ApiResponseMessages {
     const val UNLIKE_SUCCESSFULLY = "Unlike successfully."
     const val UNLIKE_UNSUCCESSFULLY = "Unlike unsuccessfully."
     const val DELETE_POST_SUCCESSFULLY = "Delete post and like information about this post successfully."
+    const val CREATE_COMMENT_SUCCESSFULLY = "Create a comment successfully."
+    const val COMMENT_TOO_LONG = "The comment is too long."
+    const val DELETE_COMMENT_SUCCESSFULLY = "Delete comment successfully."
 }

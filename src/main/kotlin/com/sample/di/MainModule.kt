@@ -1,5 +1,7 @@
 package com.sample.di
 
+import com.sample.data.repository.comment.CommentRepository
+import com.sample.data.repository.comment.CommentRepositoryImpl
 import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.repository.follow.FollowRepositoryImpl
 import com.sample.data.repository.like.LikeRepository
@@ -8,10 +10,7 @@ import com.sample.data.repository.post.PostRepository
 import com.sample.data.repository.post.PostRepositoryImpl
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.repository.user.UserRepositoryImpl
-import com.sample.service.FollowService
-import com.sample.service.LikeService
-import com.sample.service.PostService
-import com.sample.service.UserService
+import com.sample.service.*
 import com.sample.util.Constants
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
@@ -48,4 +47,10 @@ val mainModule = module {
         LikeRepositoryImpl(get())
     }
     single { LikeService(get()) }
+    
+    // Comment
+    single<CommentRepository> { 
+        CommentRepositoryImpl(get())
+    }
+    single { CommentService(get()) }
 }

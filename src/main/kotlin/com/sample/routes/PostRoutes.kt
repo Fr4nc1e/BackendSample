@@ -63,7 +63,7 @@ fun Route.getPostForFollows(
     userService: UserService
 ) {
     authenticate {
-        get("/api/post/follow") {
+        get("/api/post/follow/get") {
             val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
@@ -97,7 +97,7 @@ fun Route.getPostByLikes(
     likeService: LikeService
 ) {
     authenticate {
-        get("/api/post/like") {
+        get("/api/post/like/get") {
             val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
