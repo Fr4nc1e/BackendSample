@@ -14,5 +14,5 @@ data class User(
     val weChatUrl: String?,
     val skills: List<String> = listOf(),
     @BsonId
-    val id: String = ObjectId().toString(),
+    val id: String = ObjectId().toString()
 )

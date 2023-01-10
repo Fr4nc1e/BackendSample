@@ -8,7 +8,7 @@ import org.litote.kmongo.eq
 
 class LikeRepositoryImpl(
     db: CoroutineDatabase
-): LikeRepository {
+) : LikeRepository {
 
     private val likes = db.getCollection<Like>()
     private val users = db.getCollection<User>()

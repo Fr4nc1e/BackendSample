@@ -9,5 +9,5 @@ data class Like(
     val userId: String,
     val parentId: String,
     @BsonId
-    val id: String = ObjectId().toString(),
+    val id: String = ObjectId().toString()
 )

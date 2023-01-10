@@ -9,7 +9,7 @@ class LikeService(
     suspend fun likeParent(
         userId: String,
         parentId: String
-    ) : Boolean {
+    ): Boolean {
         return repository.likeParent(
             userId = userId,
             parentId = parentId
@@ -19,7 +19,7 @@ class LikeService(
     suspend fun unlikeParent(
         userId: String,
         parentId: String
-    ) : Boolean {
+    ): Boolean {
         return repository.unLikeParent(userId, parentId)
     }
 

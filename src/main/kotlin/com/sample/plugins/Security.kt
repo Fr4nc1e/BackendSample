@@ -7,7 +7,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
 fun Application.configureSecurity() {
-
     authentication {
         jwt {
             val jwtAudience = this@configureSecurity.environment.config.property("jwt.audience").getString()
@@ -26,7 +25,6 @@ fun Application.configureSecurity() {
             }
         }
     }
-
 }
 
 val JWTPrincipal.email: String?

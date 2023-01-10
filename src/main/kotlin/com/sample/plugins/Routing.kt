@@ -36,7 +36,7 @@ fun Application.configureRouting() {
         createPost(
             postService,
             userService
-            )
+        )
         getPostForFollows(
             postService,
             userService
@@ -47,7 +47,7 @@ fun Application.configureRouting() {
             likeService
         )
 
-        //Like Route
+        // Like Route
         likeParent(
             likeService,
             userService

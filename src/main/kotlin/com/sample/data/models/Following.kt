@@ -7,5 +7,5 @@ data class Following(
     val followingUserId: String,
     val followedUserId: String,
     @BsonId
-    val id: String = ObjectId().toString(),
+    val id: String = ObjectId().toString()
 )
