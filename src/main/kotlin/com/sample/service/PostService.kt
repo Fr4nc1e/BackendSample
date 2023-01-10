@@ -35,6 +35,12 @@ class PostService(
         return repository.getPost(postId)
     }
 
+    suspend fun getPostByLike(
+        parentIdList: List<String>
+    ): List<Post> {
+        return repository.getPostByLike(parentIdList)
+    }
+
     suspend fun deletePost(postId: String) {
         repository.deletePost(postId)
     }

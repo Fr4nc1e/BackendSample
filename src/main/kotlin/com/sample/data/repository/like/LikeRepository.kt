@@ -13,4 +13,8 @@ interface LikeRepository {
     ): Boolean
 
     suspend fun deleteLikesForParent(parentId: String)
+
+    suspend fun getLikedEntitiesForUser(
+        userId: String
+    ): List<String>
 }

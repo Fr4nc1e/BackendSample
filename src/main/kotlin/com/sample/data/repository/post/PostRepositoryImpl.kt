@@ -56,4 +56,18 @@ class PostRepositoryImpl(
     override suspend fun getPost(postId: String): Post? {
         return posts.findOneById(postId)
     }
+
+    override suspend fun getPostByLike(
+        parentIdList: List<String>,
+        page: Int,
+        pageSize: Int
+    ): List<Post> {
+        return posts.find(
+            Post::id `in` parentIdList
+        )
+            .skip(page * pageSize)
+            .limit(pageSize)
+            .descendingSort(Post::timestamp)
+            .toList()
+    }
 }

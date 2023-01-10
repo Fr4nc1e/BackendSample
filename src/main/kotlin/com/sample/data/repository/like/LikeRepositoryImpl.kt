@@ -19,7 +19,7 @@ class LikeRepositoryImpl(
             likes.insertOne(
                 Like(
                     userId = userId,
-                    parentId = parentId
+                    parentId = parentId,
                 )
             )
             true
@@ -41,5 +41,17 @@ class LikeRepositoryImpl(
 
     override suspend fun deleteLikesForParent(parentId: String) {
         likes.deleteMany(Like::parentId eq parentId)
+    }
+
+    override suspend fun getLikedEntitiesForUser(
+        userId: String,
+    ): List<String> {
+        return likes.find(
+            Like::userId eq userId
+        )
+            .toList()
+            .map {
+                it.parentId
+            }
     }
 }

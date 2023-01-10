@@ -63,7 +63,7 @@ fun Route.getPostForFollows(
     userService: UserService
 ) {
     authenticate {
-        get {
+        get("/api/post/follow") {
             val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
@@ -82,6 +82,38 @@ fun Route.getPostForFollows(
                     page,
                     pageSize
                 )
+                call.respond(
+                    HttpStatusCode.OK,
+                    posts
+                )
+            }
+        }
+    }
+}
+
+fun Route.getPostByLikes(
+    userService: UserService,
+    postService: PostService,
+    likeService: LikeService
+) {
+    authenticate {
+        get("/api/post/like") {
+            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+
+            val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
+            val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
+                ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
+
+            ifEmailBelongsToUser(
+                userId = userId,
+                validateEmail = userService::doesEmailBelongToUserId
+            ) {
+                val parentIdList = likeService.getLikeEntityForUser(userId)
+                val posts = postService.getPostByLike(parentIdList)
+
                 call.respond(
                     HttpStatusCode.OK,
                     posts

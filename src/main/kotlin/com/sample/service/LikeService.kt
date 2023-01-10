@@ -26,4 +26,10 @@ class LikeService(
     suspend fun deleteLikesForParent(parentId: String) {
         repository.deleteLikesForParent(parentId)
     }
+
+    suspend fun getLikeEntityForUser(
+        userId: String
+    ): List<String> {
+        return repository.getLikedEntitiesForUser(userId)
+    }
 }

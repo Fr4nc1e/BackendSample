@@ -41,6 +41,11 @@ fun Application.configureRouting() {
             postService,
             userService
         )
+        getPostByLikes(
+            userService,
+            postService,
+            likeService
+        )
         deletePost(
             postService,
             userService,
