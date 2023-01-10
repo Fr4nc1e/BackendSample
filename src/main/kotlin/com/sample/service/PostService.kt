@@ -30,4 +30,12 @@ class PostService(
             pageSize = pageSize
         )
     }
+
+    suspend fun getPost(postId: String): Post? {
+        return repository.getPost(postId)
+    }
+
+    suspend fun deletePost(postId: String) {
+        repository.deletePost(postId)
+    }
 }

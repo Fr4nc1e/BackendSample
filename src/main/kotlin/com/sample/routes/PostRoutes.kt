@@ -1,8 +1,10 @@
 package com.sample.routes
 
 import com.sample.data.requests.CreatePostRequest
+import com.sample.data.requests.DeletePostRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.routes.util.ifEmailBelongsToUser
+import com.sample.service.LikeService
 import com.sample.service.PostService
 import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages
@@ -15,7 +17,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.createPostRoute(
+fun Route.createPost(
     postService: PostService,
     userService: UserService
 ) {
@@ -83,6 +85,42 @@ fun Route.getPostForFollows(
                 call.respond(
                     HttpStatusCode.OK,
                     posts
+                )
+            }
+        }
+    }
+}
+
+fun Route.deletePost(
+    postService: PostService,
+    userService: UserService,
+    likeService: LikeService
+) {
+    authenticate {
+        delete("/api/post/delete") {
+            val request = call.receiveNullable<DeletePostRequest>() ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@delete
+            }
+
+            val post = postService.getPost(request.postId)
+            if (post == null) {
+                call.respond(HttpStatusCode.NotFound)
+                return@delete
+            }
+
+            ifEmailBelongsToUser(
+                userId = post.userId,
+                validateEmail = userService::doesEmailBelongToUserId
+            ) {
+                postService.deletePost(postId = request.postId)
+                likeService.deleteLikesForParent(parentId = request.postId)
+                call.respond(
+                    HttpStatusCode.OK,
+                    BasicApiResponse(
+                        successful = true,
+                        message = ApiResponseMessages.DELETE_POST_SUCCESSFULLY
+                    )
                 )
             }
         }
