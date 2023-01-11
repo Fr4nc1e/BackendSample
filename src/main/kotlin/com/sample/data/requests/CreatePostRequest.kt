@@ -4,6 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreatePostRequest(
-    val description: String,
-    val imageUrl: String?
+    val description: String
 )

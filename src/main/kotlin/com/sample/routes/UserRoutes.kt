@@ -21,6 +21,7 @@ import com.sample.util.Constants
 import com.sample.util.Constants.BASE_URL
 import com.sample.util.Constants.PROFILE_PICTURE_PATH
 import com.sample.util.QueryParams
+import com.sample.util.save
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -254,14 +255,7 @@ fun Route.updateUser(
                         }
                     }
                     is PartData.FileItem -> {
-                        val fileBytes = partData.streamProvider().readBytes()
-                        val fileExtension = partData.originalFileName?.takeLastWhile {
-                            it != '.'
-                        }
-                        fileName = UUID.randomUUID().toString() + "." + fileExtension
-                        File(
-                            "$PROFILE_PICTURE_PATH$fileName"
-                        ).writeBytes(fileBytes)
+                        fileName = partData.save(PROFILE_PICTURE_PATH)
                         File(
                             "$PROFILE_PICTURE_PATH${
                                 userService.getUserById(call.userId)

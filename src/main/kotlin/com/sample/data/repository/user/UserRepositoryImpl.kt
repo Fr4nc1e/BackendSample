@@ -45,7 +45,9 @@ class UserRepositoryImpl(
                 User::username regex Regex(pattern = "(?i).*$query.*"),
                 User::email eq query
             )
-        ).toList()
+        )
+            .descendingSort(User::followerCount)
+            .toList()
     }
 
     override suspend fun updateUser(

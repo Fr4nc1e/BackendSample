@@ -1,5 +1,6 @@
 package com.sample.routes
 
+import com.google.gson.Gson
 import com.sample.data.requests.CreatePostRequest
 import com.sample.data.requests.DeletePostRequest
 import com.sample.data.responses.BasicApiResponse
@@ -10,51 +11,72 @@ import com.sample.service.PostService
 import com.sample.util.ApiResponseMessages
 import com.sample.util.Constants
 import com.sample.util.QueryParams
+import com.sample.util.save
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
+import java.io.File
 
 fun Route.createPost(
     postService: PostService
 ) {
+    val gson: Gson by inject()
+
     authenticate {
         post("/api/post/create") {
-            val request = call.receiveNullable<CreatePostRequest>() ?: kotlin.run {
-                call.respond(
-                    HttpStatusCode.BadRequest
-                )
-                return@post
+            val multipart = call.receiveMultipart()
+            var createPostRequest: CreatePostRequest? = null
+            var fileName: String? = null
+            multipart.forEachPart { partData ->
+                when (partData) {
+                    is PartData.FormItem -> {
+                        if (partData.name == "post_data") {
+                            createPostRequest = gson.fromJson(
+                                partData.value,
+                                CreatePostRequest::class.java
+                            )
+                        }
+                    }
+                    is PartData.FileItem -> {
+                        fileName = partData.save(Constants.POST_CONTENT_PATH)
+                    }
+                    else -> Unit
+                }
             }
 
-            val userId = call.userId
-            val didUserExist = postService.createPostIfUserExists(
-                request = request,
-                userId = userId
-            )
+            val postContentUrl = "${Constants.BASE_URL}post_contents/$fileName"
 
-                if (!didUserExist) {
+            createPostRequest?.let { request ->
+                val createPostAcknowledge = postService.createPost(
+                    request = request,
+                    userId = call.userId,
+                    contentUrl = postContentUrl
+                )
+                if (createPostAcknowledge) {
                     call.respond(
                         HttpStatusCode.OK,
                         BasicApiResponse(
-                            successful = false,
-                            message = ApiResponseMessages.USER_NOT_FOUND
+                            successful = true
                         )
                     )
                 } else {
+                    File("${Constants.POST_CONTENT_PATH}/$fileName").delete()
                     call.respond(
-                        HttpStatusCode.OK,
-                        BasicApiResponse(
-                            successful = true,
-                            message = ApiResponseMessages.CREATE_POST_SUCCESSFULLY
-                        )
+                        HttpStatusCode.InternalServerError
                     )
                 }
+            } ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@post
             }
         }
     }
+}
 
 fun Route.getPostForFollows(
     postService: PostService

@@ -5,7 +5,7 @@ import com.sample.util.Constants
 
 interface PostRepository {
 
-    suspend fun createPostIfUserExists(
+    suspend fun createPost(
         post: Post
     ): Boolean
 
