@@ -11,6 +11,8 @@ interface UserRepository {
 
     suspend fun getUserByEmail(email: String) : User?
 
+    suspend fun getUsers(userIds: List<String>): List<User>
+
     suspend fun doesPasswordForUserMatch(
         email: String,
         enteredPassword: String

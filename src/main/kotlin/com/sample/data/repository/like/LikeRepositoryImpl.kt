@@ -65,4 +65,18 @@ class LikeRepositoryImpl(
                 it.parentId
             }
     }
+
+    override suspend fun getLikesForParent(
+        postId: String,
+        page: Int,
+        pageSize: Int
+    ): List<Like> {
+        return likes.find(
+            Like::parentId eq postId
+        )
+            .skip(page * pageSize)
+            .limit(pageSize)
+            .descendingSort(Like::timeStamp)
+            .toList()
+    }
 }

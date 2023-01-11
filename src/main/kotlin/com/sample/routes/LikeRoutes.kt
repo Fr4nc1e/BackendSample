@@ -7,6 +7,7 @@ import com.sample.routes.util.userId
 import com.sample.service.ActivityService
 import com.sample.service.LikeService
 import com.sample.util.ApiResponseMessages
+import com.sample.util.QueryParams
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -90,3 +91,23 @@ fun Route.unlikeParent(
         }
     }
     }
+
+fun Route.getLikesForParent(likeService: LikeService) {
+    authenticate {
+        get("/api/like/users") {
+            val parentId = call.parameters[QueryParams.PARAM_PARENT_ID] ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+
+            val usersLikedParent = likeService.getUsersLikedParent(
+                userId = call.userId,
+                parentId = parentId
+            )
+            call.respond(
+                HttpStatusCode.OK,
+                usersLikedParent
+            )
+        }
+    }
+}

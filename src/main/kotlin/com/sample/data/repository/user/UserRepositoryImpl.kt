@@ -4,6 +4,7 @@ import com.sample.data.models.User
 import com.sample.data.requests.UpdateProfileRequest
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.`in`
 import org.litote.kmongo.or
 import org.litote.kmongo.regex
 
@@ -30,6 +31,10 @@ class UserRepositoryImpl(
     ): Boolean {
         val user = getUserByEmail(email)
         return user?.password == enteredPassword
+    }
+
+    override suspend fun getUsers(userIds: List<String>): List<User> {
+        return users.find(User::id `in` userIds).toList()
     }
 
     override suspend fun doesEmailBelongToUserId(

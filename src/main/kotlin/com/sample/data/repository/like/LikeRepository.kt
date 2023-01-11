@@ -1,5 +1,6 @@
 package com.sample.data.repository.like
 
+import com.sample.data.models.Like
 import com.sample.util.Constants
 
 interface LikeRepository {
@@ -22,4 +23,10 @@ interface LikeRepository {
         page: Int = 0,
         pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
     ): List<String>
+
+    suspend fun getLikesForParent(
+        postId: String,
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
+    ) : List<Like>
 }

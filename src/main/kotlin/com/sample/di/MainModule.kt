@@ -49,7 +49,7 @@ val mainModule = module {
     single<LikeRepository> {
         LikeRepositoryImpl(get())
     }
-    single { LikeService(get()) }
+    single { LikeService(get(), get(), get()) }
     
     // Comment
     single<CommentRepository> { 
