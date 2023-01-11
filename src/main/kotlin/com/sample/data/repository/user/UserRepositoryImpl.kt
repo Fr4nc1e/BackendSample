@@ -3,6 +3,8 @@ package com.sample.data.repository.user
 import com.sample.data.models.User
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.or
+import org.litote.kmongo.regex
 
 class UserRepositoryImpl(
     db: CoroutineDatabase
@@ -34,5 +36,14 @@ class UserRepositoryImpl(
         userId: String
     ): Boolean {
         return users.findOneById(userId)?.email == email
+    }
+
+    override suspend fun searchUser(query: String): List<User> {
+        return users.find(
+            or(
+                User::username regex Regex(pattern = "(?i).*$query.*"),
+                User::email eq query
+            )
+        ).toList()
     }
 }

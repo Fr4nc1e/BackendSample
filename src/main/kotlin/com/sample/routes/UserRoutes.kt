@@ -2,17 +2,21 @@ package com.sample.routes
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.sample.data.models.User
 import com.sample.data.requests.CreateAccountRequest
 import com.sample.data.requests.LoginRequest
 import com.sample.data.responses.AuthResponse
 import com.sample.data.responses.BasicApiResponse
+import com.sample.routes.util.userId
 import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages.CREATE_USER_SUCCESSFULLY
 import com.sample.util.ApiResponseMessages.FIELDS_BLANK
 import com.sample.util.ApiResponseMessages.INVALID_CREDENTIALS
 import com.sample.util.ApiResponseMessages.USER_ALREADY_EXISTS
+import com.sample.util.QueryParams
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -134,6 +138,30 @@ fun Route.loginUser(
                     successful = false,
                     message = INVALID_CREDENTIALS
                 )
+            )
+        }
+    }
+}
+
+fun Route.searchUser(
+    userService: UserService
+) {
+    authenticate {
+        get("/api/user/search") {
+            val query = call.parameters[QueryParams.PARAM_QUERY]
+            if (query.isNullOrBlank()) {
+                call.respond(
+                    HttpStatusCode.OK,
+                    listOf<User>()
+                )
+                return@get
+            }
+
+            val searchResults = userService.searchUser(query, call.userId)
+
+            call.respond(
+                HttpStatusCode.OK,
+                searchResults
             )
         }
     }

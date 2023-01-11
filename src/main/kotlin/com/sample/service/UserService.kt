@@ -1,44 +1,60 @@
 package com.sample.service
 
 import com.sample.data.models.User
+import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreateAccountRequest
-import com.sample.data.requests.LoginRequest
+import com.sample.data.responses.UserResponseItem
 
 class UserService(
-    private val repository: UserRepository
+    private val userRepository: UserRepository,
+    private val followRepository: FollowRepository
 ) {
 
     suspend fun doesUserWithEmailExist(
         email: String
     ): Boolean {
-        return repository.getUserByEmail(email) != null
+        return userRepository.getUserByEmail(email) != null
     }
 
     suspend fun doesEmailBelongToUserId(
         email: String,
         userId: String
-    ) = repository.doesEmailBelongToUserId(email, userId)
+    ) = userRepository.doesEmailBelongToUserId(email, userId)
 
     suspend fun getUserByEmail(email: String): User? {
-        return repository.getUserByEmail(email)
+        return userRepository.getUserByEmail(email)
     }
 
     fun isValidpassword(enteredPassword: String, actualPassword: String): Boolean {
         return enteredPassword == actualPassword
     }
 
-    suspend fun doesPasswordMatchForUser(
-        request: LoginRequest
-    ) = repository.doesPasswordForUserMatch(
-        email = request.email,
-        enteredPassword = request.password
-    )
+    suspend fun searchUser(
+        query: String,
+        userId: String
+    ): List<UserResponseItem> {
+        val users = userRepository.searchUser(query)
+        val followsByUser = followRepository.getFollowsByUser(userId)
+
+        return users.map { user ->
+            val isFollowing = followsByUser.find {
+                it.followedUserId == user.id
+            } != null
+
+            UserResponseItem(
+                username = user.username,
+                profileImageUrl = user.profileImageUrl,
+                bio = user.bio,
+                isFollowing = isFollowing
+            )
+        }
+    }
 
     suspend fun createUser(
         request: CreateAccountRequest
     ) {
-        repository.createUser(
+        userRepository.createUser(
             User(
                 email = request.email,
                 username = request.username,

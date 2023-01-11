@@ -19,4 +19,6 @@ interface UserRepository {
         email: String,
         userId: String
     ): Boolean
+
+    suspend fun searchUser(query: String): List<User>
 }
