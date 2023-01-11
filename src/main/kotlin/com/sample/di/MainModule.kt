@@ -1,5 +1,6 @@
 package com.sample.di
 
+import com.google.gson.Gson
 import com.sample.data.repository.activity.ActivityRepository
 import com.sample.data.repository.activity.ActivityRepositoryImpl
 import com.sample.data.repository.comment.CommentRepository
@@ -61,4 +62,7 @@ val mainModule = module {
         ActivityRepositoryImpl(get())
     }
     single { ActivityService(get(), get(), get()) }
+
+    // Gson
+    single { Gson() }
 }

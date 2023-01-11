@@ -1,6 +1,7 @@
 package com.sample.data.repository.user
 
 import com.sample.data.models.User
+import com.sample.data.requests.UpdateProfileRequest
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 import org.litote.kmongo.or
@@ -45,5 +46,31 @@ class UserRepositoryImpl(
                 User::email eq query
             )
         ).toList()
+    }
+
+    override suspend fun updateUser(
+        userId: String,
+        profileImageUrl: String,
+        updateProfileRequest: UpdateProfileRequest
+    ): Boolean {
+        val user = getUserById(userId) ?: return false
+        return users.updateOneById(
+            id = userId,
+            update = User(
+                email = user.email,
+                username = updateProfileRequest.username,
+                password = user.password,
+                profileImageUrl = profileImageUrl,
+                bio = updateProfileRequest.bio,
+                gitHubUrl = updateProfileRequest.gitHubUrl,
+                qqUrl = updateProfileRequest.qqUrl,
+                weChatUrl = updateProfileRequest.weChatUrl,
+                followerCount = user.followerCount,
+                followingCount = user.followingCount,
+                postCount = user.postCount,
+                hobbies = updateProfileRequest.hobbies,
+                id = user.id
+            )
+        ).wasAcknowledged()
     }
 }

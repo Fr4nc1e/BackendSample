@@ -1,14 +1,15 @@
 package com.sample.data.repository.user
 
 import com.sample.data.models.User
+import com.sample.data.requests.UpdateProfileRequest
 
 interface UserRepository {
 
     suspend fun createUser(user: User)
 
-    suspend fun getUserById(id: String): User?
+    suspend fun getUserById(id: String) : User?
 
-    suspend fun getUserByEmail(email: String): User?
+    suspend fun getUserByEmail(email: String) : User?
 
     suspend fun doesPasswordForUserMatch(
         email: String,
@@ -18,7 +19,13 @@ interface UserRepository {
     suspend fun doesEmailBelongToUserId(
         email: String,
         userId: String
-    ): Boolean
+    ) : Boolean
 
-    suspend fun searchUser(query: String): List<User>
+    suspend fun searchUser(query: String) : List<User>
+
+    suspend fun updateUser(
+        userId: String,
+        profileImageUrl: String,
+        updateProfileRequest: UpdateProfileRequest
+    ) : Boolean
 }

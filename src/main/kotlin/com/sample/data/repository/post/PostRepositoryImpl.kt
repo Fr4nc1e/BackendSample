@@ -70,4 +70,17 @@ class PostRepositoryImpl(
             .descendingSort(Post::timestamp)
             .toList()
     }
+
+    override suspend fun getPostForProfile(
+        userId: String,
+        page: Int,
+        pageSize: Int
+    ): List<Post> {
+        return posts.find(
+            Post::userId eq userId
+        ).skip(page * pageSize)
+            .limit(pageSize)
+            .descendingSort(Post::timestamp)
+            .toList()
+    }
 }

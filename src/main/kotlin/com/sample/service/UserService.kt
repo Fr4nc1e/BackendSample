@@ -4,6 +4,8 @@ import com.sample.data.models.User
 import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreateAccountRequest
+import com.sample.data.requests.UpdateProfileRequest
+import com.sample.data.responses.ProfileResponse
 import com.sample.data.responses.UserResponseItem
 
 class UserService(
@@ -17,16 +19,40 @@ class UserService(
         return userRepository.getUserByEmail(email) != null
     }
 
-    suspend fun doesEmailBelongToUserId(
-        email: String,
-        userId: String
-    ) = userRepository.doesEmailBelongToUserId(email, userId)
-
     suspend fun getUserByEmail(email: String): User? {
         return userRepository.getUserByEmail(email)
     }
 
-    fun isValidpassword(enteredPassword: String, actualPassword: String): Boolean {
+    suspend fun getUserProfile(
+        userId: String,
+        callerUserId: String
+    ) : ProfileResponse? {
+        val user = userRepository.getUserById(userId) ?: return null
+
+        return ProfileResponse(
+            username = user.username,
+            bio = user.bio,
+            followerCount = user.followerCount,
+            followingCount = user.followingCount,
+            postCount = user.postCount,
+            profilePictureUrl = user.profileImageUrl,
+            topHobbyUrls = user.hobbies,
+            gitHubUrl = user.gitHubUrl,
+            qqUrl = user.qqUrl,
+            weChatUrl = user.weChatUrl,
+            isOwnProfile = (userId == callerUserId),
+            isFollowing = if (userId != callerUserId) {
+                followRepository.doesUserFollow(
+                    followingUserId = callerUserId,
+                    followedUserId = userId
+                )
+            } else {
+                false
+            }
+        )
+    }
+
+    fun isValidPassword(enteredPassword: String, actualPassword: String): Boolean {
         return enteredPassword == actualPassword
     }
 
@@ -50,6 +76,16 @@ class UserService(
             )
         }
     }
+
+    suspend fun updateUser(
+        userId: String,
+        profileImageUrl: String,
+        updateProfileRequest: UpdateProfileRequest
+    ) = userRepository.updateUser(
+        userId,
+        profileImageUrl,
+        updateProfileRequest
+    )
 
     suspend fun createUser(
         request: CreateAccountRequest

@@ -3,6 +3,7 @@ package com.sample.plugins
 import com.sample.routes.*
 import com.sample.service.*
 import io.ktor.server.application.*
+import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
@@ -27,6 +28,9 @@ fun Application.configureRouting() {
             jwtSecret
         )
         searchUser(userService)
+        getUserProfile(userService)
+        getPostsForProfile(postService)
+        updateUser(userService)
 
         // Follow Route
         followUser(
@@ -69,5 +73,9 @@ fun Application.configureRouting() {
 
         // Activity Route
         getActivities(activityService)
+
+        static {
+            resources("static")
+        }
     }
 }
