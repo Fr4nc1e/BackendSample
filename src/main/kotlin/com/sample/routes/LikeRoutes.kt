@@ -2,7 +2,9 @@ package com.sample.routes
 
 import com.sample.data.requests.LikeUpdateRequest
 import com.sample.data.responses.BasicApiResponse
+import com.sample.data.util.ParentType
 import com.sample.routes.util.userId
+import com.sample.service.ActivityService
 import com.sample.service.LikeService
 import com.sample.util.ApiResponseMessages
 import io.ktor.http.*
@@ -13,7 +15,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.likeParent(
-    likeService: LikeService
+    likeService: LikeService,
+    activityService: ActivityService
 ) {
     authenticate {
         post("/api/like") {
@@ -21,11 +24,18 @@ fun Route.likeParent(
                 call.respond(HttpStatusCode.BadRequest)
         return@post
     }
+            val userId = call.userId
             val likeSuccessful = likeService.likeParent(
-                userId = call.userId,
-                parentId = request.parentId
+                userId = userId,
+                parentId = request.parentId,
+                parentType = request.parentType
             )
             if (likeSuccessful) {
+                activityService.addLikeActivity(
+                    byUserId = userId,
+                    parentType = ParentType.fromType(request.parentType),
+                    parentId = request.parentId
+                )
                 call.respond(
                     HttpStatusCode.OK,
                     BasicApiResponse(

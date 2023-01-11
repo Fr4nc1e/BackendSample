@@ -12,6 +12,7 @@ fun Application.configureRouting() {
     val postService: PostService by inject()
     val likeService: LikeService by inject()
     val commentService: CommentService by inject()
+    val activityService: ActivityService by inject()
     val jwtIssuer = environment.config.property("jwt.domain").getString()
     val jwtAudience = environment.config.property("jwt.audience").getString()
     val jwtSecret = environment.config.property("jwt.secret").getString()
@@ -27,7 +28,10 @@ fun Application.configureRouting() {
         )
 
         // Follow Route
-        followUser(followService)
+        followUser(
+            followService,
+            activityService
+        )
         unFollowUser(followService)
 
         // Post Route
@@ -39,20 +43,30 @@ fun Application.configureRouting() {
         )
         deletePost(
             postService,
-            likeService
+            likeService,
+            commentService
         )
 
         // Like Route
-        likeParent(likeService)
+        likeParent(
+            likeService,
+            activityService
+        )
         unlikeParent(likeService)
 
         // Comment Route
-        createComment(commentService)
+        createComment(
+            commentService,
+            activityService
+        )
         getCommentsForPost(commentService)
         getCommentedPostsForUser(commentService)
         deleteComment(
             commentService,
             likeService
         )
+
+        // Activity Route
+        getActivities(activityService)
     }
 }

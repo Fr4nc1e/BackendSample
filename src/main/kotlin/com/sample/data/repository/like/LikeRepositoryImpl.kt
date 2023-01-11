@@ -13,14 +13,19 @@ class LikeRepositoryImpl(
     private val likes = db.getCollection<Like>()
     private val users = db.getCollection<User>()
 
-    override suspend fun likeParent(userId: String, parentId: String): Boolean {
+    override suspend fun likeParent(
+        userId: String,
+        parentId: String,
+        parentType: Int
+    ): Boolean {
         val doesUserExist = users.findOneById(userId) != null
         return if (doesUserExist) {
             likes.insertOne(
                 Like(
                     userId = userId,
                     parentId = parentId,
-                    timeStamp = System.currentTimeMillis()
+                    timeStamp = System.currentTimeMillis(),
+                    parentType = parentType
                 )
             )
             true
@@ -46,14 +51,16 @@ class LikeRepositoryImpl(
 
     override suspend fun getLikedEntitiesForUser(
         userId: String,
+        page: Int,
+        pageSize: Int
     ): List<String> {
         return likes.find(
             Like::userId eq userId
         )
+            .skip(page * pageSize)
+            .limit(pageSize)
+            .descendingSort(Like::timeStamp)
             .toList()
-            .sortedBy {
-                it.timeStamp
-            }
             .map {
                 it.parentId
             }

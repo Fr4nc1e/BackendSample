@@ -1,6 +1,7 @@
 package com.sample.service
 
 import com.sample.data.repository.like.LikeRepository
+import com.sample.util.Constants
 
 class LikeService(
     private val repository: LikeRepository
@@ -8,11 +9,13 @@ class LikeService(
 
     suspend fun likeParent(
         userId: String,
-        parentId: String
+        parentId: String,
+        parentType: Int
     ): Boolean {
         return repository.likeParent(
             userId = userId,
-            parentId = parentId
+            parentId = parentId,
+            parentType = parentType
         )
     }
 
@@ -28,8 +31,14 @@ class LikeService(
     }
 
     suspend fun getLikeEntityForUser(
-        userId: String
+        userId: String,
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
     ): List<String> {
-        return repository.getLikedEntitiesForUser(userId)
+        return repository.getLikedEntitiesForUser(
+            userId,
+            page,
+            pageSize
+        )
     }
 }

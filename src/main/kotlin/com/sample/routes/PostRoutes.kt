@@ -4,6 +4,7 @@ import com.sample.data.requests.CreatePostRequest
 import com.sample.data.requests.DeletePostRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.routes.util.userId
+import com.sample.service.CommentService
 import com.sample.service.LikeService
 import com.sample.service.PostService
 import com.sample.util.ApiResponseMessages
@@ -83,7 +84,11 @@ fun Route.getPostByLikes(
             val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
                 ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
 
-                val parentIdList = likeService.getLikeEntityForUser(call.userId)
+                val parentIdList = likeService.getLikeEntityForUser(
+                    call.userId,
+                    page,
+                    pageSize
+                )
                 val posts = postService.getPostByLike(parentIdList)
 
                 call.respond(
@@ -96,7 +101,8 @@ fun Route.getPostByLikes(
 
 fun Route.deletePost(
     postService: PostService,
-    likeService: LikeService
+    likeService: LikeService,
+    commentService: CommentService
 ) {
     authenticate {
         delete("/api/post/delete") {
@@ -114,6 +120,7 @@ fun Route.deletePost(
             if (post.userId == call.userId) {
                 postService.deletePost(postId = request.postId)
                 likeService.deleteLikesForParent(parentId = request.postId)
+                commentService.deleteCommentForPost(postId = request.postId)
                 call.respond(
                     HttpStatusCode.OK,
                     BasicApiResponse(

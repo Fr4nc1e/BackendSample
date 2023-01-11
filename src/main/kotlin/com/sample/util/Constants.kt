@@ -6,5 +6,6 @@ object Constants {
     val DATABASE_URL = "mongodb+srv://admin:admin@cluster0.i7nzu4x.mongodb.net/?retryWrites=true&w=majority"
 
     const val DEFAULT_POST_PAGE_SIZE = 15
+    const val DEFAULT_Activity_PAGE_SIZE = 15
     const val MAX_COMMENT_LENGTH = 2000
 }

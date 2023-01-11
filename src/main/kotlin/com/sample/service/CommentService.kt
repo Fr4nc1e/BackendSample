@@ -40,12 +40,32 @@ class CommentService(
         return repository.deleteComment(commentId)
     }
 
-    suspend fun getCommentsForPost(postId: String): List<Comment> {
-        return repository.getCommentsForPost(postId)
+    suspend fun deleteCommentForPost(postId: String) {
+        repository.deleteCommentsFromPost(postId)
     }
 
-    suspend fun getCommentedPostForUser(userId: String): HashMap<Comment, Post> {
-        return repository.getCommentedPostForUser(userId)
+    suspend fun getCommentsForPost(
+        postId: String,
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
+    ): List<Comment> {
+        return repository.getCommentsForPost(
+            postId,
+            page,
+            pageSize
+        )
+    }
+
+    suspend fun getCommentedPostForUser(
+        userId: String,
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
+    ): HashMap<Comment, Post> {
+        return repository.getCommentedPostForUser(
+            userId,
+            page,
+            pageSize
+        )
     }
 
     suspend fun getCommentById(commentId: String) =
