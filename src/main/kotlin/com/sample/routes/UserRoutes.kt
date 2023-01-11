@@ -262,6 +262,15 @@ fun Route.updateUser(
                         File(
                             "$PROFILE_PICTURE_PATH$fileName"
                         ).writeBytes(fileBytes)
+                        File(
+                            "$PROFILE_PICTURE_PATH${
+                                userService.getUserById(call.userId)
+                                    ?.profileImageUrl
+                                    ?.takeLastWhile { 
+                                    it != '/'
+                                }
+                            }"
+                        ).delete()
                     }
                     else -> Unit
                 }

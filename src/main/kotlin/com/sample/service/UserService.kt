@@ -19,6 +19,10 @@ class UserService(
         return userRepository.getUserByEmail(email) != null
     }
 
+    suspend fun getUserById(userId: String): User? {
+        return userRepository.getUserById(userId)
+    }
+
     suspend fun getUserByEmail(email: String): User? {
         return userRepository.getUserByEmail(email)
     }
