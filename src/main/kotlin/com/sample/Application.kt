@@ -2,6 +2,7 @@ package com.sample
 
 import com.sample.di.mainModule
 import com.sample.plugins.*
+import io.ktor.client.*
 import io.ktor.server.application.*
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger

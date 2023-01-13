@@ -31,6 +31,7 @@ fun Application.configureRouting() {
         getUserProfile(userService)
         getPostsForProfile(postService)
         updateUser(userService)
+        authenticate()
 
         // Follow Route
         followUser(

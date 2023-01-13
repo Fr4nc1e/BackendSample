@@ -60,7 +60,7 @@ fun Route.createPost(
                 if (createPostAcknowledge) {
                     call.respond(
                         HttpStatusCode.OK,
-                        BasicApiResponse(
+                        BasicApiResponse<Unit>(
                             successful = true
                         )
                     )
@@ -145,7 +145,7 @@ fun Route.deletePost(
                 commentService.deleteCommentForPost(postId = request.postId)
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = true,
                         message = ApiResponseMessages.DELETE_POST_SUCCESSFULLY
                     )

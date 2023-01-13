@@ -33,7 +33,7 @@ fun Route.createComment(
                     is CommentService.ValidationEvent.ErrorFieldEmpty -> {
                         call.respond(
                             HttpStatusCode.OK,
-                            BasicApiResponse(
+                            BasicApiResponse<Unit>(
                                 successful = false,
                                 message = ApiResponseMessages.FIELDS_BLANK
                             )
@@ -42,7 +42,7 @@ fun Route.createComment(
                     is CommentService.ValidationEvent.ErrorCommentTooLong -> {
                         call.respond(
                             HttpStatusCode.OK,
-                            BasicApiResponse(
+                            BasicApiResponse<Unit>(
                                 successful = false,
                                 message = ApiResponseMessages.COMMENT_TOO_LONG
                             )
@@ -55,7 +55,7 @@ fun Route.createComment(
                         )
                         call.respond(
                             HttpStatusCode.OK,
-                            BasicApiResponse(
+                            BasicApiResponse<Unit>(
                                 successful = true,
                                 message = ApiResponseMessages.CREATE_COMMENT_SUCCESSFULLY
                             )
@@ -135,7 +135,7 @@ fun Route.deleteComment(
                     likeService.deleteLikesForParent(request.commentId)
                     call.respond(
                         HttpStatusCode.OK,
-                        BasicApiResponse(
+                        BasicApiResponse<Unit>(
                             successful = true,
                             message = ApiResponseMessages.DELETE_COMMENT_SUCCESSFULLY
                             )
@@ -143,7 +143,7 @@ fun Route.deleteComment(
                 } else {
                     call.respond(
                         HttpStatusCode.NotFound,
-                        BasicApiResponse(successful = false)
+                        BasicApiResponse<Unit>(successful = false)
                     )
                 }
             }

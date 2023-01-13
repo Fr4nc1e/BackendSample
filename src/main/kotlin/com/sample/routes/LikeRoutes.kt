@@ -39,7 +39,7 @@ fun Route.likeParent(
                 )
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = true,
                         message = ApiResponseMessages.LIKE_SUCCESSFULLY
                     )
@@ -47,7 +47,7 @@ fun Route.likeParent(
             } else {
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = false,
                         message = ApiResponseMessages.LIKE_UNSUCCESSFULLY
                     )
@@ -74,7 +74,7 @@ fun Route.unlikeParent(
             if (unlikeParentSuccessful) {
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = true,
                         message = ApiResponseMessages.UNLIKE_SUCCESSFULLY
                     )
@@ -82,7 +82,7 @@ fun Route.unlikeParent(
             } else {
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = false,
                         message = ApiResponseMessages.UNLIKE_UNSUCCESSFULLY
                     )

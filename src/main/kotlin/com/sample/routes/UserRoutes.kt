@@ -46,7 +46,7 @@ fun Route.createUser(
             val userExists = userService.doesUserWithEmailExist(request.email)
             if (userExists) {
                 call.respond(
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = false,
                         message = USER_ALREADY_EXISTS
                     )
@@ -56,7 +56,7 @@ fun Route.createUser(
 
             if (request.email.isBlank() || request.password.isBlank() || request.username.isBlank()) {
                 call.respond(
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = false,
                         message = FIELDS_BLANK
                     )
@@ -68,7 +68,7 @@ fun Route.createUser(
                 is UserService.ValidationEvent.ErrorFieldEmpty -> {
                     call.respond(
                         HttpStatusCode.OK,
-                        BasicApiResponse(
+                        BasicApiResponse<Unit>(
                             successful = false,
                             message = FIELDS_BLANK
                         )
@@ -79,7 +79,7 @@ fun Route.createUser(
                     userService.createUser(request)
                     call.respond(
                         HttpStatusCode.OK,
-                        BasicApiResponse(
+                        BasicApiResponse<Unit>(
                             successful = true,
                             message = CREATE_USER_SUCCESSFULLY
                         )
@@ -110,7 +110,7 @@ fun Route.loginUser(
         val user = userService.getUserByEmail(request.email) ?: kotlin.run {
             call.respond(
                 HttpStatusCode.OK,
-                BasicApiResponse(
+                BasicApiResponse<Unit>(
                     successful = false,
                     message = INVALID_CREDENTIALS
                 )
@@ -140,12 +140,15 @@ fun Route.loginUser(
                 .sign(Algorithm.HMAC256(jwtSecret))
             call.respond(
                 HttpStatusCode.OK,
-                AuthResponse(token = token)
+                BasicApiResponse(
+                    successful = true,
+                    data = AuthResponse(token)
+                )
             )
         } else {
             call.respond(
                 HttpStatusCode.OK,
-                BasicApiResponse(
+                BasicApiResponse<Unit>(
                     successful = false,
                     message = INVALID_CREDENTIALS
                 )
@@ -224,7 +227,7 @@ fun Route.getUserProfile(
             } else {
                 call.respond(
                     HttpStatusCode.OK,
-                    BasicApiResponse(
+                    BasicApiResponse<Unit>(
                         successful = false,
                         message = ApiResponseMessages.USER_NOT_FOUND
                     )
@@ -281,7 +284,7 @@ fun Route.updateUser(
                 if (updateAcknowledged) {
                     call.respond(
                         HttpStatusCode.OK,
-                        BasicApiResponse(
+                        BasicApiResponse<Unit>(
                             successful = true
                         )
                     )
@@ -293,6 +296,14 @@ fun Route.updateUser(
                 call.respond(HttpStatusCode.BadRequest)
                 return@put
             }
+        }
+    }
+}
+
+fun Route.authenticate() {
+    authenticate {
+        get("/api/user/authenticate") {
+            call.respond(HttpStatusCode.OK)
         }
     }
 }
