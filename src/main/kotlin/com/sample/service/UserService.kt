@@ -65,13 +65,16 @@ class UserService(
         query: String,
         userId: String
     ): List<UserResponseItem> {
-        val users = userRepository.searchUser(query)
-        val followsByUser = followRepository.getFollowsByUser(userId)
+        val users = userRepository.searchUser(
+            query = query,
+            ownUserId = userId
+        )
 
         return users.map { user ->
-            val isFollowing = followsByUser.find {
-                it.followedUserId == user.id
-            } != null
+            val isFollowing = followRepository
+                .getFollowsByUser(userId).find {
+                    it.followedUserId == user.id
+                } != null
 
             UserResponseItem(
                 userId = user.id,

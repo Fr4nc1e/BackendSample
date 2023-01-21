@@ -2,11 +2,8 @@ package com.sample.data.repository.user
 
 import com.sample.data.models.User
 import com.sample.data.requests.UpdateProfileRequest
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
-import org.litote.kmongo.`in`
-import org.litote.kmongo.or
-import org.litote.kmongo.regex
 
 class UserRepositoryImpl(
     db: CoroutineDatabase
@@ -44,12 +41,19 @@ class UserRepositoryImpl(
         return users.findOneById(userId)?.email == email
     }
 
-    override suspend fun searchUser(query: String): List<User> {
+    override suspend fun searchUser(
+        query: String,
+        ownUserId: String
+    ): List<User> {
         return users.find(
-            or(
-                User::username regex Regex(pattern = "(?i).*$query.*"),
-                User::email eq query
+            and(
+                or(
+                    User::username regex Regex(pattern = "(?i).*$query.*"),
+                    User::email eq query
+                ),
+                User::id ne ownUserId
             )
+
         )
             .descendingSort(User::followerCount)
             .toList()

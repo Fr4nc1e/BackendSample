@@ -23,7 +23,10 @@ interface UserRepository {
         userId: String
     ) : Boolean
 
-    suspend fun searchUser(query: String) : List<User>
+    suspend fun searchUser(
+        query: String,
+        ownUserId: String
+    ) : List<User>
 
     suspend fun updateUser(
         userId: String,
