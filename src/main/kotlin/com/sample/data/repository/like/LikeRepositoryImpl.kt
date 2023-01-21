@@ -49,23 +49,6 @@ class LikeRepositoryImpl(
         likes.deleteMany(Like::parentId eq parentId)
     }
 
-    override suspend fun getLikedEntitiesForUser(
-        userId: String,
-        page: Int,
-        pageSize: Int
-    ): List<String> {
-        return likes.find(
-            Like::userId eq userId
-        )
-            .skip(page * pageSize)
-            .limit(pageSize)
-            .descendingSort(Like::timeStamp)
-            .toList()
-            .map {
-                it.parentId
-            }
-    }
-
     override suspend fun getLikesForParent(
         postId: String,
         page: Int,

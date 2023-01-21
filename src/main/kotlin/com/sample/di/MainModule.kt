@@ -43,7 +43,7 @@ val mainModule = module {
     single<PostRepository> {
         PostRepositoryImpl(get())
     }
-    single { PostService(get()) }
+    single { PostService(get(), get()) }
 
     // Like
     single<LikeRepository> {

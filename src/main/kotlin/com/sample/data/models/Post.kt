@@ -6,7 +6,7 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class Post(
-    val contentUrl: String?,
+    val contentUrl: String,
     val userId: String,
     val timestamp: Long,
     val description: String,

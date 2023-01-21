@@ -18,12 +18,6 @@ interface LikeRepository {
 
     suspend fun deleteLikesForParent(parentId: String)
 
-    suspend fun getLikedEntitiesForUser(
-        userId: String,
-        page: Int = 0,
-        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ): List<String>
-
     suspend fun getLikesForParent(
         postId: String,
         page: Int = 0,

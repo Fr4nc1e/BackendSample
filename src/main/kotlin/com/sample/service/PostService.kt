@@ -2,17 +2,20 @@ package com.sample.service
 
 import com.sample.data.models.Post
 import com.sample.data.repository.post.PostRepository
+import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreatePostRequest
+import com.sample.data.responses.PostResponse
 import com.sample.util.Constants
 
 class PostService(
-    private val repository: PostRepository
+    private val postRepository: PostRepository,
+    private val userRepository: UserRepository
 ) {
     suspend fun createPost(
         request: CreatePostRequest,
         userId: String,
-        contentUrl: String?
-    ) = repository.createPost(
+        contentUrl: String
+    ) = postRepository.createPost(
         Post(
             contentUrl = contentUrl,
             userId = userId,
@@ -22,40 +25,50 @@ class PostService(
     )
 
     suspend fun getPostForFollows(
-        userId: String,
+        ownUserId: String,
         page: Int = 0,
         pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ): List<Post> {
-        return repository.getPostByFollows(
-            userId = userId,
+    ): List<PostResponse> {
+        return postRepository.getPostByFollows(
+            ownUserId = ownUserId,
             page = page,
             pageSize = pageSize
         )
     }
 
     suspend fun getPost(postId: String): Post? {
-        return repository.getPost(postId)
+        return postRepository.getPost(postId)
     }
 
-    suspend fun getPostByLike(
-        parentIdList: List<String>
-    ): List<Post> {
-        return repository.getPostByLike(parentIdList)
-    }
-
-    suspend fun deletePost(postId: String) {
-        repository.deletePost(postId)
-    }
-
-    suspend fun getPostForProfile(
+    suspend fun getPostForLike(
+        ownUserId: String,
         userId: String,
         page: Int = 0,
         pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ) : List<Post> {
-        return repository.getPostForProfile(
-            userId,
-            page,
-            pageSize
+    ): List<PostResponse> {
+        return postRepository.getPostForLike(
+            ownUserId = ownUserId,
+            userId = userId,
+            page = page,
+            pageSize = pageSize
+        )
+    }
+
+    suspend fun deletePost(postId: String) {
+        postRepository.deletePost(postId)
+    }
+
+    suspend fun getPostForProfile(
+        ownUserId: String,
+        userId: String,
+        page: Int = 0,
+        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
+    ) : List<PostResponse> {
+        return postRepository.getPostForProfile(
+            ownUserId = ownUserId,
+            userId = userId,
+            page = page,
+            pageSize = pageSize
         )
     }
 }

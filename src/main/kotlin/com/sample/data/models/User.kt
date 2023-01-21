@@ -8,6 +8,7 @@ data class User(
     val username: String,
     val password: String,
     val profileImageUrl: String,
+    val bannerUrl: String,
     val bio: String,
     val gitHubUrl: String?,
     val qqUrl: String?,
@@ -15,7 +16,6 @@ data class User(
     val followerCount: Int = 0,
     val followingCount: Int = 0,
     val postCount: Int = 0,
-    val hobbies: List<Hobby> = listOf(),
     @BsonId
     val id: String = ObjectId().toString()
 )

@@ -61,7 +61,8 @@ fun Route.createPost(
                     call.respond(
                         HttpStatusCode.OK,
                         BasicApiResponse<Unit>(
-                            successful = true
+                            successful = true,
+                            message = fileName?.takeLastWhile { it != '.' }
                         )
                     )
                 } else {
@@ -78,48 +79,77 @@ fun Route.createPost(
     }
 }
 
+fun Route.getPostsForProfile(
+    postService: PostService
+) {
+    authenticate {
+        get("/api/user/post") {
+            val userId = call
+                .parameters[QueryParams.PARAM_USER_ID]
+            val page = call
+                .parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
+            val pageSize = call
+                .parameters[QueryParams.PARAM_PAGE_SIZE]?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
+
+            val posts = postService.getPostForProfile(
+                ownUserId = call.userId,
+                userId = userId ?: call.userId,
+                page = page,
+                pageSize = pageSize
+            )
+            call.respond(
+                HttpStatusCode.OK,
+                posts
+            )
+        }
+    }
+}
+
 fun Route.getPostForFollows(
     postService: PostService
 ) {
     authenticate {
         get("/api/post/follow/get") {
-            val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
-            val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
-                ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
+            val page = call
+                .parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
+            val pageSize = call
+                .parameters[QueryParams.PARAM_PAGE_SIZE]?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
 
             val posts = postService.getPostForFollows(call.userId, page, pageSize)
-                call.respond(
-                    HttpStatusCode.OK,
-                    posts
-                )
-            }
+            call.respond(
+                HttpStatusCode.OK,
+                posts
+            )
         }
     }
+}
 
-fun Route.getPostByLikes(
-    postService: PostService,
-    likeService: LikeService
+fun Route.getPostForLikes(
+    postService: PostService
 ) {
     authenticate {
         get("/api/post/like/get") {
-            val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
-            val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
-                ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
+            val userId = call
+                .parameters[QueryParams.PARAM_USER_ID]
+            val page = call
+                .parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
+            val pageSize = call
+                .parameters[QueryParams.PARAM_PAGE_SIZE]?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
 
-                val parentIdList = likeService.getLikeEntityForUser(
-                    call.userId,
-                    page,
-                    pageSize
-                )
-                val posts = postService.getPostByLike(parentIdList)
+            val posts = postService.getPostForLike(
+                ownUserId = call.userId,
+                userId = userId ?: call.userId,
+                page = page,
+                pageSize = pageSize
+            )
 
-                call.respond(
-                    HttpStatusCode.OK,
-                    posts
-                )
-            }
+            call.respond(
+                HttpStatusCode.OK,
+                posts
+            )
         }
     }
+}
 
 fun Route.deletePost(
     postService: PostService,

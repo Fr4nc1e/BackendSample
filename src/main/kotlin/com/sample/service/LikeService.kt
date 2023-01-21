@@ -4,7 +4,6 @@ import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.repository.like.LikeRepository
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.responses.UserResponseItem
-import com.sample.util.Constants
 
 class LikeService(
     private val likeRepository: LikeRepository,
@@ -35,18 +34,6 @@ class LikeService(
         likeRepository.deleteLikesForParent(parentId)
     }
 
-    suspend fun getLikeEntityForUser(
-        userId: String,
-        page: Int = 0,
-        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ): List<String> {
-        return likeRepository.getLikedEntitiesForUser(
-            userId,
-            page,
-            pageSize
-        )
-    }
-
     suspend fun getUsersLikedParent(
         userId: String,
         parentId: String
@@ -64,6 +51,7 @@ class LikeService(
                 it.followedUserId == user.id
             } != null
             UserResponseItem(
+                userId = user.id,
                 username = user.username,
                 profileImageUrl = user.profileImageUrl,
                 bio = user.bio,

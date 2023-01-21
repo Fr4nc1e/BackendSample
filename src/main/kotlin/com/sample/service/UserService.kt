@@ -34,13 +34,14 @@ class UserService(
         val user = userRepository.getUserById(userId) ?: return null
 
         return ProfileResponse(
+            userId = user.id,
             username = user.username,
             bio = user.bio,
             followerCount = user.followerCount,
             followingCount = user.followingCount,
             postCount = user.postCount,
             profilePictureUrl = user.profileImageUrl,
-            topHobbyUrls = user.hobbies,
+            bannerUrl = user.bannerUrl,
             gitHubUrl = user.gitHubUrl,
             qqUrl = user.qqUrl,
             weChatUrl = user.weChatUrl,
@@ -73,6 +74,7 @@ class UserService(
             } != null
 
             UserResponseItem(
+                userId = user.id,
                 username = user.username,
                 profileImageUrl = user.profileImageUrl,
                 bio = user.bio,
@@ -83,12 +85,14 @@ class UserService(
 
     suspend fun updateUser(
         userId: String,
-        profileImageUrl: String,
+        profileImageUrl: String?,
+        bannerUrl: String?,
         updateProfileRequest: UpdateProfileRequest
     ) = userRepository.updateUser(
-        userId,
-        profileImageUrl,
-        updateProfileRequest
+        userId = userId,
+        profileImageUrl = profileImageUrl,
+        bannerUrl = bannerUrl,
+        updateProfileRequest = updateProfileRequest
     )
 
     suspend fun createUser(
@@ -100,6 +104,7 @@ class UserService(
                 username = request.username,
                 password = request.password,
                 profileImageUrl = "",
+                bannerUrl = "",
                 bio = "",
                 qqUrl = null,
                 weChatUrl = null,

@@ -20,6 +20,7 @@ fun Application.configureRouting() {
 
     routing {
         // User Route
+        authenticate()
         createUser(userService)
         loginUser(
             userService,
@@ -29,9 +30,7 @@ fun Application.configureRouting() {
         )
         searchUser(userService)
         getUserProfile(userService)
-        getPostsForProfile(postService)
         updateUser(userService)
-        authenticate()
 
         // Follow Route
         followUser(
@@ -43,10 +42,8 @@ fun Application.configureRouting() {
         // Post Route
         createPost(postService)
         getPostForFollows(postService)
-        getPostByLikes(
-            postService,
-            likeService
-        )
+        getPostsForProfile(postService)
+        getPostForLikes(postService)
         deletePost(
             postService,
             likeService,
