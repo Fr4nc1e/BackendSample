@@ -4,6 +4,7 @@ import com.sample.data.models.Activity
 import com.sample.data.repository.activity.ActivityRepository
 import com.sample.data.repository.comment.CommentRepository
 import com.sample.data.repository.post.PostRepository
+import com.sample.data.responses.ActivityResponse
 import com.sample.data.util.ActivityType
 import com.sample.data.util.ParentType
 import com.sample.util.Constants
@@ -30,11 +31,11 @@ class ActivityService(
         userId: String,
         page: Int = 0,
         pageSize: Int = Constants.DEFAULT_Activity_PAGE_SIZE
-    ) : List<Activity> {
-        return activityRepository.getActivityiesForUser(
-            userId,
-            page,
-            pageSize
+    ) : List<ActivityResponse> {
+        return activityRepository.getActivitiesForUser(
+            userId = userId,
+            page = page,
+            pageSize = pageSize
         )
     }
 

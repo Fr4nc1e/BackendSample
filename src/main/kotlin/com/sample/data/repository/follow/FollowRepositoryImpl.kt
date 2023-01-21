@@ -5,6 +5,7 @@ import com.sample.data.models.User
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.`in`
 
 class FollowRepositoryImpl(
     db: CoroutineDatabase
@@ -49,6 +50,26 @@ class FollowRepositoryImpl(
     override suspend fun getFollowsByUser(userId: String): List<Following> {
         return following.find(
             Following::followingUserId eq userId
+        ).toList()
+    }
+
+    override suspend fun getFollowedUsers(userId: String): List<User> {
+        val followList = following.find(
+            Following::followingUserId eq userId
+        ).toList()
+            .map { it.followedUserId }
+        return users.find(
+            User::id `in` followList
+        ).toList()
+    }
+
+    override suspend fun getFollowingUsers(userId: String): List<User> {
+        val followList = following.find(
+            Following::followedUserId eq userId
+        ).toList()
+            .map { it.followingUserId }
+        return users.find(
+            User::id `in` followList
         ).toList()
     }
 
