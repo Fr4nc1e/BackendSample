@@ -68,16 +68,10 @@ class PostRepositoryImpl(
                     Like::userId eq ownUserId
                 )
                 ) != null
-                val user = users.findOneById(post.userId)
-                PostResponse(
-                    id = post.id,
-                    userId = ownUserId,
-                    username = user?.username ?: "",
-                    contentUrl = post.contentUrl,
-                    profilePictureUrl = user?.profileImageUrl ?: "",
-                    description = post.description,
-                    likeCount = post.likeCount,
-                    commentCount = post.commentCount,
+                val user = users.findOneById(post.userId) ?: return emptyList()
+                post.toPostResponse(
+                    username = user.username,
+                    profilePictureUrl = user.profileImageUrl,
                     isLiked = isLiked,
                     isOwnPost = ownUserId == post.userId
                 )
@@ -108,22 +102,16 @@ class PostRepositoryImpl(
             .descendingSort(Post::timestamp)
             .toList()
             .map { post ->
-                val user = users.findOneById(post.userId)
+                val user = users.findOneById(post.userId) ?: return emptyList()
                 val isLiked = likes.findOne(
                     and(
                     Like::parentId eq post.id,
                     Like::userId eq ownUserId
                 )
                 ) != null
-                PostResponse(
-                    id = post.id,
-                    userId = post.userId,
-                    username = user?.username ?: "",
-                    contentUrl = post.contentUrl,
-                    profilePictureUrl = user?.profileImageUrl ?: "",
-                    description = post.description,
-                    likeCount = post.likeCount,
-                    commentCount = post.commentCount,
+                post.toPostResponse(
+                    username = user.username,
+                    profilePictureUrl = user.profileImageUrl,
                     isLiked = isLiked,
                     isOwnPost = ownUserId == post.userId
                 )
@@ -149,18 +137,27 @@ class PostRepositoryImpl(
                     Like::userId eq ownUserId
                 )
                 ) != null
-                PostResponse(
-                    id = post.id,
-                    userId = userId,
+                post.toPostResponse(
                     username = user.username,
-                    contentUrl = post.contentUrl,
                     profilePictureUrl = user.profileImageUrl,
-                    description = post.description,
-                    likeCount = post.likeCount,
-                    commentCount = post.commentCount,
                     isLiked = isLiked,
                     isOwnPost = ownUserId == post.userId
                 )
             }
+    }
+
+    override suspend fun getPostDetails(
+        userId: String,
+        postId: String
+    ): PostResponse? {
+        val isLiked = likes.findOne(Like::userId eq userId) != null
+        val post =  posts.findOneById(postId) ?: return null
+        val user = users.findOneById(post.userId) ?: return null
+        return post.toPostResponse(
+            username = user.username,
+            profilePictureUrl = user.profileImageUrl,
+            isLiked = isLiked,
+            isOwnPost = (userId == post.userId)
+        )
     }
 }

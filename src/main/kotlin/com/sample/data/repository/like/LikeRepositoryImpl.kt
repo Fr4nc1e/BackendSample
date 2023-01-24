@@ -1,10 +1,14 @@
 package com.sample.data.repository.like
 
+import com.sample.data.models.Comment
 import com.sample.data.models.Like
+import com.sample.data.models.Post
 import com.sample.data.models.User
+import com.sample.data.util.ParentType
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
 
 class LikeRepositoryImpl(
     db: CoroutineDatabase
@@ -12,6 +16,8 @@ class LikeRepositoryImpl(
 
     private val likes = db.getCollection<Like>()
     private val users = db.getCollection<User>()
+    private val comments = db.getCollection<Comment>()
+    private val posts = db.getCollection<Post>()
 
     override suspend fun likeParent(
         userId: String,
@@ -20,6 +26,22 @@ class LikeRepositoryImpl(
     ): Boolean {
         val doesUserExist = users.findOneById(userId) != null
         return if (doesUserExist) {
+            when (parentType) {
+                ParentType.Post.type -> {
+                    val post = posts.findOneById(parentId) ?: return false
+                    posts.updateOneById(
+                        id = parentId,
+                        update = setValue(Post::likeCount, post.likeCount + 1)
+                    )
+                }
+                ParentType.Comment.type -> {
+                    val comment = comments.findOneById(parentId) ?: return false
+                    comments.updateOneById(
+                        id = parentId,
+                        update = setValue(Comment::likeCount, comment.likeCount + 1)
+                    )
+                }
+            }
             likes.insertOne(
                 Like(
                     userId = userId,
@@ -32,9 +54,25 @@ class LikeRepositoryImpl(
         } else false
     }
 
-    override suspend fun unLikeParent(userId: String, parentId: String): Boolean {
+    override suspend fun unLikeParent(userId: String, parentId: String, parentType: Int): Boolean {
         val doesUserExist = users.findOneById(userId) != null
         return if (doesUserExist) {
+            when (parentType) {
+                ParentType.Post.type -> {
+                    val post = posts.findOneById(parentId) ?: return false
+                    posts.updateOneById(
+                        id = parentId,
+                        update = setValue(Post::likeCount, (post.likeCount - 1).coerceAtLeast(0))
+                    )
+                }
+                ParentType.Comment.type -> {
+                    val comment = comments.findOneById(parentId) ?: return false
+                    comments.updateOneById(
+                        id = parentId,
+                        update = setValue(Comment::likeCount, (comment.likeCount - 1).coerceAtLeast(0))
+                    )
+                }
+            }
             likes.deleteOne(
                 and(
                     Like::userId eq userId,

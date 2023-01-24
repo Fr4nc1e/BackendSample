@@ -43,7 +43,7 @@ val mainModule = module {
     single<PostRepository> {
         PostRepositoryImpl(get())
     }
-    single { PostService(get(), get()) }
+    single { PostService(get()) }
 
     // Like
     single<LikeRepository> {
@@ -55,7 +55,7 @@ val mainModule = module {
     single<CommentRepository> { 
         CommentRepositoryImpl(get())
     }
-    single { CommentService(get()) }
+    single { CommentService(get(), get()) }
 
     // Activity
     single<ActivityRepository> {

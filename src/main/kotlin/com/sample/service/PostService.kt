@@ -2,14 +2,12 @@ package com.sample.service
 
 import com.sample.data.models.Post
 import com.sample.data.repository.post.PostRepository
-import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreatePostRequest
 import com.sample.data.responses.PostResponse
 import com.sample.util.Constants
 
 class PostService(
-    private val postRepository: PostRepository,
-    private val userRepository: UserRepository
+    private val postRepository: PostRepository
 ) {
     suspend fun createPost(
         request: CreatePostRequest,
@@ -38,6 +36,10 @@ class PostService(
 
     suspend fun getPost(postId: String): Post? {
         return postRepository.getPost(postId)
+    }
+
+    suspend fun getPostDetails(userId: String, postId: String): PostResponse? {
+        return postRepository.getPostDetails(userId, postId)
     }
 
     suspend fun getPostForLike(

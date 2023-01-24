@@ -3,16 +3,13 @@ package com.sample.data.responses
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PostResponse(
+data class CommentResponse(
     val id: String,
     val userId: String,
     val username: String,
-    val contentUrl: String,
     val profilePictureUrl: String,
     val timestamp: Long,
-    val description: String,
-    val likeCount: Int,
-    val commentCount: Int,
+    val comment: String,
     val isLiked: Boolean,
-    val isOwnPost: Boolean
+    val likeCount: Int
 )

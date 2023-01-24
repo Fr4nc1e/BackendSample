@@ -62,14 +62,19 @@ fun Route.unlikeParent(
 ) {
     authenticate {
         delete("/api/unlike") {
-            val request = call.receiveNullable<LikeUpdateRequest>() ?: kotlin.run {
+            val parentId = call.parameters[QueryParams.PARAM_PARENT_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
-        return@delete
-    }
+                return@delete
+            }
+            val parentType = call.parameters[QueryParams.PARAM_PARENT_TYPE]?.toIntOrNull() ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@delete
+            }
 
             val unlikeParentSuccessful = likeService.unlikeParent(
                 userId = call.userId,
-                parentId = request.parentId
+                parentId = parentId,
+                parentType = parentType
             )
             if (unlikeParentSuccessful) {
                 call.respond(
@@ -94,7 +99,7 @@ fun Route.unlikeParent(
 
 fun Route.getLikesForParent(likeService: LikeService) {
     authenticate {
-        get("/api/like/users") {
+        get("/api/like/parent") {
             val parentId = call.parameters[QueryParams.PARAM_PARENT_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
@@ -106,7 +111,10 @@ fun Route.getLikesForParent(likeService: LikeService) {
             )
             call.respond(
                 HttpStatusCode.OK,
-                usersLikedParent
+                BasicApiResponse(
+                    successful = true,
+                    data = usersLikedParent
+                )
             )
         }
     }

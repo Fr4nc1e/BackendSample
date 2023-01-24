@@ -1,5 +1,6 @@
 package com.sample.data.models
 
+import com.sample.data.responses.PostResponse
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
@@ -14,4 +15,25 @@ data class Post(
     val commentCount: Int = 0,
     @BsonId
     val id: String = ObjectId().toString()
-)
+) {
+    fun toPostResponse(
+        username: String,
+        profilePictureUrl: String,
+        isLiked: Boolean,
+        isOwnPost: Boolean
+    ): PostResponse {
+        return PostResponse(
+            id = id,
+            userId = userId,
+            username = username,
+            contentUrl = contentUrl,
+            profilePictureUrl = profilePictureUrl,
+            timestamp = timestamp,
+            description = description,
+            likeCount = likeCount,
+            commentCount = commentCount,
+            isLiked = isLiked,
+            isOwnPost = isOwnPost
+        )
+    }
+}

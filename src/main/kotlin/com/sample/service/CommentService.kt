@@ -1,13 +1,15 @@
 package com.sample.service
 
 import com.sample.data.models.Comment
-import com.sample.data.models.Post
 import com.sample.data.repository.comment.CommentRepository
+import com.sample.data.repository.user.UserRepository
 import com.sample.data.requests.CreateCommentRequest
+import com.sample.data.responses.CommentResponse
 import com.sample.util.Constants
 
 class CommentService(
-    private val repository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val userRepository: UserRepository
 ) {
 
     suspend fun createComment(
@@ -23,12 +25,16 @@ class CommentService(
             }
         }
 
-        repository.createComment(
+        val user = userRepository.getUserById(userId) ?: return ValidationEvent.UserNotFound
+        commentRepository.createComment(
             Comment(
+                username = user.username,
+                profileImageUrl = user.profileImageUrl,
+                likeCount = 0,
                 comment = request.comment,
                 userId = userId,
                 postId = request.postId,
-                timestamp = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis(),
             )
         )
         return ValidationEvent.Success
@@ -37,43 +43,30 @@ class CommentService(
     suspend fun deleteComment(
         commentId: String
     ) : Boolean {
-        return repository.deleteComment(commentId)
+        return commentRepository.deleteComment(commentId)
     }
 
     suspend fun deleteCommentForPost(postId: String) {
-        repository.deleteCommentsFromPost(postId)
+        commentRepository.deleteCommentsFromPost(postId)
     }
 
     suspend fun getCommentsForPost(
         postId: String,
-        page: Int = 0,
-        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ): List<Comment> {
-        return repository.getCommentsForPost(
+        ownUserId: String
+    ): List<CommentResponse> {
+        return commentRepository.getCommentsForPost(
             postId,
-            page,
-            pageSize
-        )
-    }
-
-    suspend fun getCommentedPostForUser(
-        userId: String,
-        page: Int = 0,
-        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ): HashMap<Comment, Post> {
-        return repository.getCommentedPostForUser(
-            userId,
-            page,
-            pageSize
+            ownUserId
         )
     }
 
     suspend fun getCommentById(commentId: String) =
-        repository.getComment(commentId)
+        commentRepository.getComment(commentId)
 
     sealed class ValidationEvent {
         object ErrorFieldEmpty : ValidationEvent()
         object ErrorCommentTooLong : ValidationEvent()
         object Success : ValidationEvent()
+        object UserNotFound : ValidationEvent()
     }
 }

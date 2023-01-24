@@ -1,8 +1,7 @@
 package com.sample.data.repository.comment
 
 import com.sample.data.models.Comment
-import com.sample.data.models.Post
-import com.sample.util.Constants
+import com.sample.data.responses.CommentResponse
 
 interface CommentRepository {
 
@@ -14,15 +13,8 @@ interface CommentRepository {
 
     suspend fun getCommentsForPost(
         postId: String,
-        page: Int = 0,
-        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ) : List<Comment>
-
-    suspend fun getCommentedPostForUser(
-        userId: String,
-        page: Int = 0,
-        pageSize: Int = Constants.DEFAULT_POST_PAGE_SIZE
-    ) : HashMap<Comment, Post>
+        ownUserId: String
+    ) : List<CommentResponse>
 
     suspend fun getComment(commentId: String): Comment?
 }

@@ -25,9 +25,10 @@ class LikeService(
 
     suspend fun unlikeParent(
         userId: String,
-        parentId: String
+        parentId: String,
+        parentType: Int
     ): Boolean {
-        return likeRepository.unLikeParent(userId, parentId)
+        return likeRepository.unLikeParent(userId, parentId, parentType)
     }
 
     suspend fun deleteLikesForParent(parentId: String) {

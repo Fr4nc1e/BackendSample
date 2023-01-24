@@ -8,7 +8,6 @@ import com.sample.service.ActivityService
 import com.sample.service.CommentService
 import com.sample.service.LikeService
 import com.sample.util.ApiResponseMessages
-import com.sample.util.Constants
 import com.sample.util.QueryParams
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -61,6 +60,16 @@ fun Route.createComment(
                             )
                         )
                     }
+
+                    CommentService.ValidationEvent.UserNotFound -> {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            BasicApiResponse<Unit>(
+                                successful = false,
+                                message = "User not found"
+                            )
+                        )
+                    }
                 }
         }
     }
@@ -69,47 +78,23 @@ fun Route.createComment(
 fun Route.getCommentsForPost(
     commentService: CommentService
 ) {
-    authenticate {
-        get("/api/comment/post/get") {
-            val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
-            val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
-                ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
-            val postId = call.parameters[QueryParams.PARAM_POST_ID] ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
-
-            val comments = commentService.getCommentsForPost(
-                postId,
-                page,
-                pageSize
-            )
-            call.respond(
-                HttpStatusCode.OK,
-                comments
-            )
+    get("/api/comment/post/get") {
+        val postId = call.parameters[QueryParams.PARAM_POST_ID] ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@get
         }
-    }
-}
 
-fun Route.getCommentedPostsForUser(
-    commentService: CommentService
-) {
-    authenticate {
-        get("/api/comment/user/get") {
-            val page = call.parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
-            val pageSize = call.parameters[QueryParams.PARAM_PAGE_SIZE]
-                ?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
-            val map = commentService.getCommentedPostForUser(
-                call.userId,
-                page,
-                pageSize
+        val comments = commentService.getCommentsForPost(
+            postId,
+            ownUserId = call.userId
+        )
+        call.respond(
+            HttpStatusCode.OK,
+            BasicApiResponse(
+                successful = true,
+                data = comments
             )
-            call.respond(
-                HttpStatusCode.OK,
-                map
-            )
-        }
+        )
     }
 }
 

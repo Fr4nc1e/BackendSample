@@ -7,6 +7,7 @@ import com.sample.data.requests.CreateAccountRequest
 import com.sample.data.requests.UpdateProfileRequest
 import com.sample.data.responses.ProfileResponse
 import com.sample.data.responses.UserResponseItem
+import com.sample.util.Constants
 
 class UserService(
     private val userRepository: UserRepository,
@@ -106,9 +107,9 @@ class UserService(
                 email = request.email,
                 username = request.username,
                 password = request.password,
-                profileImageUrl = "",
-                bannerUrl = "",
-                bio = "",
+                profileImageUrl = Constants.DEFAULT_PROFILE_PICTURE_PATH,
+                bannerUrl = Constants.DEFAULT_BANNER_IMAGE_PATH,
+                bio = "Hello World.",
                 qqUrl = null,
                 weChatUrl = null,
                 gitHubUrl = null

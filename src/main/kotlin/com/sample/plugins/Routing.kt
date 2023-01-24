@@ -49,6 +49,7 @@ fun Application.configureRouting() {
             likeService,
             commentService
         )
+        getPostDetails(postService)
 
         // Like Route
         likeParent(
@@ -64,7 +65,6 @@ fun Application.configureRouting() {
             activityService
         )
         getCommentsForPost(commentService)
-        getCommentedPostsForUser(commentService)
         deleteComment(
             commentService,
             likeService
