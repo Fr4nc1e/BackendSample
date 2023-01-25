@@ -38,8 +38,11 @@ class PostService(
         return postRepository.getPost(postId)
     }
 
-    suspend fun getPostDetails(userId: String, postId: String): PostResponse? {
-        return postRepository.getPostDetails(userId, postId)
+    suspend fun getPostDetails(ownUserId: String, postId: String): PostResponse? {
+        return postRepository.getPostDetails(
+            ownUserId = ownUserId,
+            postId = postId
+        )
     }
 
     suspend fun getPostForLike(

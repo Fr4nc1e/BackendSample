@@ -33,7 +33,7 @@ interface PostRepository {
     ) : List<PostResponse>
 
     suspend fun getPostDetails(
-        userId: String,
+        ownUserId: String,
         postId: String
     ): PostResponse?
 }

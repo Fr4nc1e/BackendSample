@@ -190,21 +190,23 @@ fun Route.deletePost(
 fun Route.getPostDetails(
     postService: PostService
 ) {
-    get("/api/post/details") {
-        val postId = call.parameters["postId"] ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest)
-            return@get
-        }
-        val post = postService.getPostDetails(call.userId, postId) ?: kotlin.run {
-            call.respond(HttpStatusCode.NotFound)
-            return@get
-        }
-        call.respond(
-            HttpStatusCode.OK,
-            BasicApiResponse(
-                successful = true,
-                data = post
+    authenticate {
+        get("/api/post/details") {
+            val postId = call.parameters["postId"] ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+            val post = postService.getPostDetails(call.userId, postId) ?: kotlin.run {
+                call.respond(HttpStatusCode.NotFound)
+                return@get
+            }
+            call.respond(
+                HttpStatusCode.OK,
+                BasicApiResponse(
+                    successful = true,
+                    data = post
+                )
             )
-        )
+        }
     }
 }
