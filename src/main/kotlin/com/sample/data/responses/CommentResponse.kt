@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class CommentResponse(
     val id: String,
     val userId: String,
+    val postId: String,
     val username: String,
     val profilePictureUrl: String,
     val timestamp: Long,

@@ -60,6 +60,18 @@ class CommentService(
         )
     }
 
+    suspend fun getCommentsForUser(
+        ownUserId: String,
+        page: Int,
+        pageSize: Int
+    ): List<CommentResponse> {
+        return commentRepository.getCommentsForUser(
+            ownUserId = ownUserId,
+            page = page,
+            pageSize = pageSize
+        )
+    }
+
     suspend fun getCommentById(commentId: String) =
         commentRepository.getComment(commentId)
 

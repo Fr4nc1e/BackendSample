@@ -8,6 +8,7 @@ import com.sample.service.ActivityService
 import com.sample.service.CommentService
 import com.sample.service.LikeService
 import com.sample.util.ApiResponseMessages
+import com.sample.util.Constants
 import com.sample.util.QueryParams
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -75,26 +76,53 @@ fun Route.createComment(
     }
 }
 
+fun Route.getCommentsForUser(
+    commentService: CommentService
+) {
+    authenticate {
+        get("/api/comment/user/get") {
+            val page = call
+                .parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
+            val pageSize = call
+                .parameters[QueryParams.PARAM_PAGE_SIZE]?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
+            val comments = commentService.getCommentsForUser(
+                ownUserId = call.userId,
+                page = page,
+                pageSize = pageSize
+            )
+            call.respond(
+                HttpStatusCode.OK,
+                BasicApiResponse(
+                    successful = true,
+                    data = comments
+                )
+            )
+        }
+    }
+}
+
 fun Route.getCommentsForPost(
     commentService: CommentService
 ) {
-    get("/api/comment/post/get") {
-        val postId = call.parameters[QueryParams.PARAM_POST_ID] ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest)
-            return@get
-        }
+    authenticate {
+        get("/api/comment/post/get") {
+            val postId = call.parameters[QueryParams.PARAM_POST_ID] ?: kotlin.run {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
 
-        val comments = commentService.getCommentsForPost(
-            postId,
-            ownUserId = call.userId
-        )
-        call.respond(
-            HttpStatusCode.OK,
-            BasicApiResponse(
-                successful = true,
-                data = comments
+            val comments = commentService.getCommentsForPost(
+                postId,
+                ownUserId = call.userId
             )
-        )
+            call.respond(
+                HttpStatusCode.OK,
+                BasicApiResponse(
+                    successful = true,
+                    data = comments
+                )
+            )
+        }
     }
 }
 

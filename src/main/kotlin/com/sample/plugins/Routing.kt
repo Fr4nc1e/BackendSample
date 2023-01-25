@@ -69,6 +69,7 @@ fun Application.configureRouting() {
             commentService,
             likeService
         )
+        getCommentsForUser(commentService)
 
         // Activity Route
         getActivities(activityService)

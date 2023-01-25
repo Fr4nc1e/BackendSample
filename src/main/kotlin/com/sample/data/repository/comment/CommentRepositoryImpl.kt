@@ -54,6 +54,26 @@ class CommentRepositoryImpl(
         }
     }
 
+    override suspend fun getCommentsForUser(
+        ownUserId: String,
+        page: Int,
+        pageSize: Int
+    ): List<CommentResponse> {
+        return comments.find(Comment::userId eq ownUserId)
+            .skip(page * pageSize)
+            .limit(pageSize)
+            .descendingSort(Comment::timestamp)
+            .toList().map { comment ->
+                val isLiked = likes.findOne(
+                    and(
+                        Like::userId eq ownUserId,
+                        Like::parentId eq comment.id
+                    )
+                ) != null
+                comment.toCommentResponse(isLiked)
+            }
+    }
+
     override suspend fun getComment(commentId: String): Comment? {
         return comments.findOneById(commentId)
     }

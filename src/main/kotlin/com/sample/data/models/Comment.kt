@@ -21,6 +21,7 @@ data class Comment(
         return CommentResponse(
             id = id,
             userId = userId,
+            postId = postId,
             username = username,
             profilePictureUrl = profileImageUrl,
             timestamp = timestamp,

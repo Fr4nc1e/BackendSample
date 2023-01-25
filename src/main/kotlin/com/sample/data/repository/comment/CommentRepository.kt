@@ -16,5 +16,11 @@ interface CommentRepository {
         ownUserId: String
     ) : List<CommentResponse>
 
+    suspend fun getCommentsForUser(
+        ownUserId: String,
+        page: Int,
+        pageSize: Int
+    ) : List<CommentResponse>
+
     suspend fun getComment(commentId: String): Comment?
 }
