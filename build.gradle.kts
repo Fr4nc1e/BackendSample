@@ -43,6 +43,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.2")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.2")
     implementation("io.ktor:ktor-server-netty-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-sessions-jvm:2.2.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     // KMongo

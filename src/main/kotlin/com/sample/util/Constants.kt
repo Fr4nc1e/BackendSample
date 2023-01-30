@@ -8,6 +8,7 @@ object Constants {
 
     const val DEFAULT_POST_PAGE_SIZE = 15
     const val DEFAULT_Activity_PAGE_SIZE = 15
+    const val DEFAULT_MESSAGE_PAGE_SIZE = 15
     const val MAX_COMMENT_LENGTH = 2000
 
     const val BASE_URL = "http://172.28.211.51:8081/"

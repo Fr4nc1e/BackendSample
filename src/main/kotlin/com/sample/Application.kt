@@ -17,6 +17,7 @@ fun Application.module() {
         modules(mainModule)
     }
     configureSecurity()
+    configureSessions()
     configureSockets()
     configureHTTP()
     configureMonitoring()

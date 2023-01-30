@@ -3,6 +3,8 @@ package com.sample.di
 import com.google.gson.Gson
 import com.sample.data.repository.activity.ActivityRepository
 import com.sample.data.repository.activity.ActivityRepositoryImpl
+import com.sample.data.repository.chat.ChatRepository
+import com.sample.data.repository.chat.ChatRepositoryImpl
 import com.sample.data.repository.comment.CommentRepository
 import com.sample.data.repository.comment.CommentRepositoryImpl
 import com.sample.data.repository.follow.FollowRepository
@@ -14,6 +16,7 @@ import com.sample.data.repository.post.PostRepositoryImpl
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.repository.user.UserRepositoryImpl
 import com.sample.service.*
+import com.sample.service.chat.ChatService
 import com.sample.util.Constants
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
@@ -62,6 +65,13 @@ val mainModule = module {
         ActivityRepositoryImpl(get())
     }
     single { ActivityService(get(), get(), get()) }
+
+    // Chat
+    single<ChatRepository> {
+        ChatRepositoryImpl(get())
+    }
+    single { ChatService(get()) }
+    single { ChatService(get()) }
 
     // Gson
     single { Gson() }
