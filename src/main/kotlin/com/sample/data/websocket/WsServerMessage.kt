@@ -1,7 +1,9 @@
 package com.sample.data.websocket
 
 import com.sample.data.models.Message
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class WsServerMessage(
     val fromId: String,
     val toId: String,

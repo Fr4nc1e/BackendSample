@@ -26,7 +26,7 @@ class ChatRepositoryImpl(
         return messages.find(Message::chatId eq chatId)
             .skip(page * pageSize)
             .limit(pageSize)
-            .descendingSort(Message::timestamp)
+            .ascendingSort(Message::timestamp)
             .toList()
     }
 
@@ -67,7 +67,7 @@ class ChatRepositoryImpl(
         userId1: String,
         userId2: String,
         messageId: String
-    ) {
+    ): String {
         val chat = Chat(
             userIds = listOf(
                 userId1,
@@ -81,6 +81,7 @@ class ChatRepositoryImpl(
             id = messageId,
             update = setValue(Message::chatId, chatId)
         )
+        return chatId
     }
 
     override suspend fun doesChatWithUsersExist(

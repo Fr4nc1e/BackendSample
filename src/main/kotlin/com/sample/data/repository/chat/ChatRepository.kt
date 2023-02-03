@@ -25,7 +25,7 @@ interface ChatRepository {
         userId1: String,
         userId2: String,
         messageId: String
-    )
+    ): String
 
     suspend fun doesChatWithUsersExist(
         userId1: String,

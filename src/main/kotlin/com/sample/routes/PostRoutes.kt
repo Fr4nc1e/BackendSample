@@ -2,7 +2,6 @@ package com.sample.routes
 
 import com.google.gson.Gson
 import com.sample.data.requests.CreatePostRequest
-import com.sample.data.requests.DeletePostRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.routes.util.userId
 import com.sample.service.CommentService
@@ -158,21 +157,21 @@ fun Route.deletePost(
 ) {
     authenticate {
         delete("/api/post/delete") {
-            val request = call.receiveNullable<DeletePostRequest>() ?: kotlin.run {
+            val postId = call.parameters[QueryParams.PARAM_POST_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@delete
             }
 
-            val post = postService.getPost(request.postId)
+            val post = postService.getPost(postId)
             if (post == null) {
                 call.respond(HttpStatusCode.NotFound)
                 return@delete
             }
 
             if (post.userId == call.userId) {
-                postService.deletePost(postId = request.postId)
-                likeService.deleteLikesForParent(parentId = request.postId)
-                commentService.deleteCommentForPost(postId = request.postId)
+                postService.deletePost(postId = postId)
+                likeService.deleteLikesForParent(parentId = postId)
+                commentService.deleteCommentForPost(postId = postId)
                 call.respond(
                     HttpStatusCode.OK,
                     BasicApiResponse<Unit>(
@@ -192,7 +191,7 @@ fun Route.getPostDetails(
 ) {
     authenticate {
         get("/api/post/details") {
-            val postId = call.parameters["postId"] ?: kotlin.run {
+            val postId = call.parameters[QueryParams.PARAM_POST_ID] ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
             }
