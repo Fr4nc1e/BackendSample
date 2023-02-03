@@ -16,6 +16,7 @@ import com.sample.data.repository.post.PostRepositoryImpl
 import com.sample.data.repository.user.UserRepository
 import com.sample.data.repository.user.UserRepositoryImpl
 import com.sample.service.*
+import com.sample.service.chat.ChatController
 import com.sample.service.chat.ChatService
 import com.sample.util.Constants
 import org.koin.dsl.module
@@ -71,7 +72,7 @@ val mainModule = module {
         ChatRepositoryImpl(get())
     }
     single { ChatService(get()) }
-    single { ChatService(get()) }
+    single { ChatController(get()) }
 
     // Gson
     single { Gson() }

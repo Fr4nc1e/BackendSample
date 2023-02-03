@@ -1,8 +1,8 @@
 package com.sample.service.chat
 
-import com.sample.data.models.Chat
 import com.sample.data.models.Message
 import com.sample.data.repository.chat.ChatRepository
+import com.sample.data.responses.ChatResponse
 
 class ChatService(
     private val chatRepository: ChatRepository
@@ -19,7 +19,7 @@ class ChatService(
         )
     }
 
-    suspend fun getChatsForUser(ownUserId: String): List<Chat> {
+    suspend fun getChatsForUser(ownUserId: String): List<ChatResponse> {
         return chatRepository.getChatsForUser(ownUserId = ownUserId)
     }
 

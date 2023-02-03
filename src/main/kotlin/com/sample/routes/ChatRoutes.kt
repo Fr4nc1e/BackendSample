@@ -1,12 +1,16 @@
 package com.sample.routes
 
+import com.google.gson.Gson
 import com.sample.data.responses.BasicApiResponse
+import com.sample.data.websocket.WsServerMessage
 import com.sample.routes.util.userId
 import com.sample.service.chat.ChatController
 import com.sample.service.chat.ChatService
 import com.sample.service.chat.ChatSession
 import com.sample.util.Constants
 import com.sample.util.QueryParams
+import com.sample.util.WebSocketObject
+import com.sample.util.fromJsonOrNull
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -16,6 +20,7 @@ import io.ktor.server.sessions.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.consumeEach
+import org.koin.java.KoinJavaComponent.inject
 
 fun Route.getMessagesForChat(chatService: ChatService) {
     authenticate {
@@ -70,24 +75,75 @@ fun Route.getChatsForUser(chatService: ChatService) {
 
 fun Route.chatWebSocket(chatController: ChatController) {
     webSocket("/api/chat/websocket") {
-        val session = call.sessions.get("SESSION") as? ChatSession
+        val session = call.sessions.get<ChatSession>()
         if (session == null) {
             close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "No Session."))
             return@webSocket
         }
-
+        chatController.onJoin(session, this)
         try {
             incoming.consumeEach { frame ->
-                when (frame) {
-                    is Frame.Text -> {
+                kotlin.run {
+                    when (frame) {
+                        is Frame.Text -> {
+                            val frameText = frame.readText()
+                            val delimiterIndex = frameText.indexOf("#")
+                            if (delimiterIndex == -1) {
+                                println("No delimiter index.")
+                                return@run
+                            }
+                            val type = frameText.substring(
+                                startIndex = 0,
+                                endIndex = delimiterIndex
+                            ).toIntOrNull()
+                            if (type == null) {
+                                println("Invalid format")
+                                return@run
+                            }
+                            val json = frameText.substring(
+                                startIndex = delimiterIndex + 1,
+                                endIndex = frameText.length
+                            )
+                            handleWebSocket(
+                                webSocketSession = this,
+                                session = session,
+                                chatController = chatController,
+                                type = type,
+                                frameText = frameText,
+                                json = json
+                            )
+                        }
+                        else -> Unit
                     }
-                    else -> Unit
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
             chatController.onDisconnect(session.userId)
+        }
+    }
+}
+
+suspend fun handleWebSocket(
+    webSocketSession: WebSocketSession,
+    session: ChatSession,
+    chatController: ChatController,
+    type: Int,
+    frameText: String,
+    json: String
+) {
+    val gson by inject<Gson>(Gson::class.java)
+    when(type) {
+        WebSocketObject.MESSAGE.ordinal -> {
+            val message = gson.fromJsonOrNull(
+                json = json,
+                clazz = WsServerMessage::class.java
+            ) ?: return
+            chatController.sendMessage(
+                frameText = frameText,
+                message = message
+            )
         }
     }
 }
