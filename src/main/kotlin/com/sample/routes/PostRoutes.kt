@@ -41,9 +41,11 @@ fun Route.createPost(
                             )
                         }
                     }
+
                     is PartData.FileItem -> {
                         fileName = partData.save(Constants.POST_CONTENT_PATH)
                     }
+
                     else -> Unit
                 }
             }
@@ -182,8 +184,8 @@ fun Route.deletePost(
             } else {
                 call.respond(HttpStatusCode.Unauthorized)
             }
-            }
         }
+    }
 }
 
 fun Route.getPostDetails(

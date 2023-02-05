@@ -42,6 +42,8 @@ fun Application.configureRouting() {
             activityService
         )
         unFollowUser(followService)
+        getFollowedUsers(followService)
+        getFollowingUsers(followService)
 
         // Post Route
         createPost(postService)

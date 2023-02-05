@@ -15,6 +15,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.util.*
+
 fun Route.createUser(
     userService: UserService
 ) {
@@ -71,6 +72,7 @@ fun Route.createUser(
         }
     }
 }
+
 fun Route.loginUser(
     userService: UserService,
     jwtIssuer: String,
@@ -140,6 +142,7 @@ fun Route.loginUser(
         }
     }
 }
+
 fun Route.authenticate() {
     authenticate {
         get("/api/user/authenticate") {

@@ -103,6 +103,7 @@ fun Route.updateUser(
                             )
                         }
                     }
+
                     is PartData.FileItem -> {
                         if (partData.name == "profile_picture") {
                             profilePicFileName = partData.save(PROFILE_PICTURE_PATH)
@@ -128,6 +129,7 @@ fun Route.updateUser(
                             ).delete()
                         }
                     }
+
                     else -> Unit
                 }
             }

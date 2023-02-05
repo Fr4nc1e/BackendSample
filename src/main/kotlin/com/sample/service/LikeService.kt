@@ -40,9 +40,7 @@ class LikeService(
         parentId: String
     ): List<UserResponseItem> {
         val userIds = likeRepository.getLikesForParent(parentId)
-            .map {
-                it.userId
-            }
+            .map { it.userId }
 
         val users = userRepository.getUsers(userIds)
         val followedByUser = followRepository.getFollowsByUser(userId)

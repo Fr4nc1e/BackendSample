@@ -62,11 +62,13 @@ class CommentService(
 
     suspend fun getCommentsForUser(
         ownUserId: String,
+        userId: String,
         page: Int,
         pageSize: Int
     ): List<CommentResponse> {
         return commentRepository.getCommentsForUser(
             ownUserId = ownUserId,
+            userId = userId,
             page = page,
             pageSize = pageSize
         )

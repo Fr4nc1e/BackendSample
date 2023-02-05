@@ -46,7 +46,7 @@ class ChatController(
             ?.send(Frame.Text("${WebSocketObject.MESSAGE.ordinal}#$frameText"))
         repository.insertMessage(messageEntity)
 
-        if(!repository.doesChatWithUsersExist(ownUserId, message.toId)) {
+        if (!repository.doesChatWithUsersExist(ownUserId, message.toId)) {
             val chatId = repository.insertChat(ownUserId, message.toId, messageEntity.id)
             repository.insertMessage(messageEntity.copy(chatId = chatId))
         } else {

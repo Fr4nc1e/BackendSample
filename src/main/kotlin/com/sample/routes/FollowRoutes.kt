@@ -8,6 +8,7 @@ import com.sample.routes.util.userId
 import com.sample.service.ActivityService
 import com.sample.service.FollowService
 import com.sample.util.ApiResponseMessages
+import com.sample.util.QueryParams
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -87,6 +88,44 @@ fun Route.unFollowUser(
                     )
                 )
             }
+        }
+    }
+}
+
+fun Route.getFollowingUsers(
+    followService: FollowService
+) {
+    authenticate {
+        get("/api/follow/users/following") {
+            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: call.userId
+            val users = followService.getFollowingUsers(userId)
+
+            call.respond(
+                HttpStatusCode.OK,
+                BasicApiResponse(
+                    successful = true,
+                    data = users
+                )
+            )
+        }
+    }
+}
+
+fun Route.getFollowedUsers(
+    followService: FollowService
+) {
+    authenticate {
+        get("/api/follow/users/followed") {
+            val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: call.userId
+            val users = followService.getFollowedUsers(userId)
+
+            call.respond(
+                HttpStatusCode.OK,
+                BasicApiResponse(
+                    successful = true,
+                    data = users
+                )
+            )
         }
     }
 }

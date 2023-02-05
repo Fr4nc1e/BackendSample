@@ -3,6 +3,7 @@ package com.sample.data.repository.comment
 import com.sample.data.models.Comment
 import com.sample.data.models.Like
 import com.sample.data.models.Post
+import com.sample.data.models.User
 import com.sample.data.responses.CommentResponse
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineDatabase
@@ -15,6 +16,7 @@ class CommentRepositoryImpl(
     private val comments = db.getCollection<Comment>()
     private val posts = db.getCollection<Post>()
     private val likes = db.getCollection<Like>()
+    private val users = db.getCollection<User>()
 
     override suspend fun createComment(comment: Comment) : String {
         comments.insertOne(comment)
@@ -56,10 +58,12 @@ class CommentRepositoryImpl(
 
     override suspend fun getCommentsForUser(
         ownUserId: String,
+        userId: String,
         page: Int,
         pageSize: Int
     ): List<CommentResponse> {
-        return comments.find(Comment::userId eq ownUserId)
+        users.findOneById(userId) ?: return emptyList()
+        return comments.find(Comment::userId eq userId)
             .skip(page * pageSize)
             .limit(pageSize)
             .descendingSort(Comment::timestamp)

@@ -38,17 +38,17 @@ ktor {
 
 dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("io.ktor:ktor-server-core-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-auth-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-websockets-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-cors-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-default-headers-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-call-logging-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.2")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-netty-jvm:2.2.2")
-    implementation("io.ktor:ktor-server-sessions-jvm:2.2.2")
+    implementation("io.ktor:ktor-server-core-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-auth-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-websockets-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-cors-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-default-headers-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-call-logging-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-netty-jvm:2.2.3")
+    implementation("io.ktor:ktor-server-sessions-jvm:2.2.3")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     // KMongo
@@ -70,7 +70,7 @@ dependencies {
     // Truth
     testImplementation("com.google.truth:truth:1.1.3")
     implementation(kotlin("stdlib-jdk8"))
-    testImplementation("io.ktor:ktor-server-tests-jvm:2.2.2")
+    testImplementation("io.ktor:ktor-server-tests-jvm:2.2.3")
 }
 
 val compileKotlin: KotlinCompile by tasks

@@ -99,6 +99,7 @@ fun Route.chatWebSocket(chatController: ChatController) {
                                     json = json
                                 )
                             }
+
                             else -> Unit
                         }
                     }
@@ -120,7 +121,7 @@ suspend fun handleWebSocket(
     json: String
 ) {
     val gson by inject<Gson>(Gson::class.java)
-    when(type) {
+    when (type) {
         WebSocketObject.MESSAGE.ordinal -> {
             val message = gson.fromJsonOrNull(
                 json = json,

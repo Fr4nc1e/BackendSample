@@ -23,8 +23,8 @@ fun Route.likeParent(
         post("/api/like") {
             val request = call.receiveNullable<LikeUpdateRequest>() ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
-        return@post
-    }
+                return@post
+            }
             val userId = call.userId
             val likeSuccessful = likeService.likeParent(
                 userId = userId,
@@ -55,7 +55,7 @@ fun Route.likeParent(
             }
         }
     }
-    }
+}
 
 fun Route.unlikeParent(
     likeService: LikeService
@@ -95,7 +95,7 @@ fun Route.unlikeParent(
             }
         }
     }
-    }
+}
 
 fun Route.getLikesForParent(likeService: LikeService) {
     authenticate {

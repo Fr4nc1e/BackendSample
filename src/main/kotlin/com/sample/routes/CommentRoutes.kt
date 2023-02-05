@@ -29,49 +29,51 @@ fun Route.createComment(
             }
 
             val userId = call.userId
-                when (commentService.createComment(request, userId)) {
-                    is CommentService.ValidationEvent.ErrorFieldEmpty -> {
-                        call.respond(
-                            HttpStatusCode.OK,
-                            BasicApiResponse<Unit>(
-                                successful = false,
-                                message = ApiResponseMessages.FIELDS_BLANK
-                            )
+            when (commentService.createComment(request, userId)) {
+                is CommentService.ValidationEvent.ErrorFieldEmpty -> {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse<Unit>(
+                            successful = false,
+                            message = ApiResponseMessages.FIELDS_BLANK
                         )
-                    }
-                    is CommentService.ValidationEvent.ErrorCommentTooLong -> {
-                        call.respond(
-                            HttpStatusCode.OK,
-                            BasicApiResponse<Unit>(
-                                successful = false,
-                                message = ApiResponseMessages.COMMENT_TOO_LONG
-                            )
-                        )
-                    }
-                    is CommentService.ValidationEvent.Success -> {
-                        activityService.addCommentActivity(
-                            byUserId = userId,
-                            postId = request.postId
-                        )
-                        call.respond(
-                            HttpStatusCode.OK,
-                            BasicApiResponse<Unit>(
-                                successful = true,
-                                message = ApiResponseMessages.CREATE_COMMENT_SUCCESSFULLY
-                            )
-                        )
-                    }
-
-                    CommentService.ValidationEvent.UserNotFound -> {
-                        call.respond(
-                            HttpStatusCode.OK,
-                            BasicApiResponse<Unit>(
-                                successful = false,
-                                message = "User not found"
-                            )
-                        )
-                    }
+                    )
                 }
+
+                is CommentService.ValidationEvent.ErrorCommentTooLong -> {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse<Unit>(
+                            successful = false,
+                            message = ApiResponseMessages.COMMENT_TOO_LONG
+                        )
+                    )
+                }
+
+                is CommentService.ValidationEvent.Success -> {
+                    activityService.addCommentActivity(
+                        byUserId = userId,
+                        postId = request.postId
+                    )
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse<Unit>(
+                            successful = true,
+                            message = ApiResponseMessages.CREATE_COMMENT_SUCCESSFULLY
+                        )
+                    )
+                }
+
+                CommentService.ValidationEvent.UserNotFound -> {
+                    call.respond(
+                        HttpStatusCode.OK,
+                        BasicApiResponse<Unit>(
+                            successful = false,
+                            message = "User not found"
+                        )
+                    )
+                }
+            }
         }
     }
 }
@@ -81,12 +83,15 @@ fun Route.getCommentsForUser(
 ) {
     authenticate {
         get("/api/comment/user/get") {
+            val userId = call
+                .parameters[QueryParams.PARAM_USER_ID]
             val page = call
                 .parameters[QueryParams.PARAM_PAGE]?.toIntOrNull() ?: 0
             val pageSize = call
                 .parameters[QueryParams.PARAM_PAGE_SIZE]?.toIntOrNull() ?: Constants.DEFAULT_POST_PAGE_SIZE
             val comments = commentService.getCommentsForUser(
                 ownUserId = call.userId,
+                userId = userId ?: call.userId,
                 page = page,
                 pageSize = pageSize
             )
@@ -142,23 +147,23 @@ fun Route.deleteComment(
                 call.respond(HttpStatusCode.Unauthorized)
                 return@delete
             }
-                val deleted = commentService.deleteComment(request.commentId)
+            val deleted = commentService.deleteComment(request.commentId)
 
-                if (deleted) {
-                    likeService.deleteLikesForParent(request.commentId)
-                    call.respond(
-                        HttpStatusCode.OK,
-                        BasicApiResponse<Unit>(
-                            successful = true,
-                            message = ApiResponseMessages.DELETE_COMMENT_SUCCESSFULLY
-                            )
+            if (deleted) {
+                likeService.deleteLikesForParent(request.commentId)
+                call.respond(
+                    HttpStatusCode.OK,
+                    BasicApiResponse<Unit>(
+                        successful = true,
+                        message = ApiResponseMessages.DELETE_COMMENT_SUCCESSFULLY
                     )
-                } else {
-                    call.respond(
-                        HttpStatusCode.NotFound,
-                        BasicApiResponse<Unit>(successful = false)
-                    )
-                }
+                )
+            } else {
+                call.respond(
+                    HttpStatusCode.NotFound,
+                    BasicApiResponse<Unit>(successful = false)
+                )
             }
         }
     }
+}
