@@ -96,9 +96,12 @@ fun Route.getFollowers(
     followService: FollowService
 ) {
     authenticate {
-        get("/api/follow/users/following") {
+        get("/api/follow/users/followers") {
             val userId = call.parameters[QueryParams.PARAM_USER_ID]
-            val users = followService.getFollowers(userId ?: call.userId)
+            val users = followService.getFollowers(
+                ownUserId = call.userId,
+                userId = userId ?: call.userId
+            )
 
             call.respond(
                 HttpStatusCode.OK,
@@ -115,9 +118,12 @@ fun Route.getFollowings(
     followService: FollowService
 ) {
     authenticate {
-        get("/api/follow/users/followed") {
+        get("/api/follow/users/followings") {
             val userId = call.parameters[QueryParams.PARAM_USER_ID]
-            val users = followService.getFollowings(userId ?: call.userId)
+            val users = followService.getFollowings(
+                ownUserId = call.userId,
+                userId = userId ?: call.userId
+            )
 
             call.respond(
                 HttpStatusCode.OK,
