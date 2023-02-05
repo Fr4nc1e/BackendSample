@@ -71,21 +71,21 @@ class FollowRepositoryImpl(
         ).toList()
     }
 
-    override suspend fun getFollowedUsers(userId: String): List<User> {
+    override suspend fun getFollowers(userId: String): List<User> {
         val followList = following.find(
-            Following::followingUserId eq userId
+            Following::followedUserId eq userId
         ).toList()
-            .map { it.followedUserId }
+            .map { it.followingUserId }
         return users.find(
             User::id `in` followList
         ).toList()
     }
 
-    override suspend fun getFollowingUsers(userId: String): List<User> {
+    override suspend fun getFollowings(userId: String): List<User> {
         val followList = following.find(
-            Following::followedUserId eq userId
+            Following::followingUserId eq userId
         ).toList()
-            .map { it.followingUserId }
+            .map { it.followedUserId }
         return users.find(
             User::id `in` followList
         ).toList()

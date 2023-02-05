@@ -17,9 +17,9 @@ interface FollowRepository {
 
     suspend fun getFollowsByUser(userId: String): List<Following>
 
-    suspend fun getFollowedUsers(userId: String): List<User>
+    suspend fun getFollowers(userId: String): List<User>
 
-    suspend fun getFollowingUsers(userId: String): List<User>
+    suspend fun getFollowings(userId: String): List<User>
 
     suspend fun doesUserFollow(
         followingUserId: String,

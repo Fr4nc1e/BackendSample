@@ -33,13 +33,15 @@ class UserService(
         callerUserId: String
     ) : ProfileResponse? {
         val user = userRepository.getUserById(userId) ?: return null
+        val followers = followRepository.getFollowers(userId)
+        val following = followRepository.getFollowings(userId)
 
         return ProfileResponse(
             userId = user.id,
             username = user.username,
             bio = user.bio,
-            followerCount = user.followerCount,
-            followingCount = user.followingCount,
+            followerCount = followers.size,
+            followingCount = following.size,
             postCount = user.postCount,
             profilePictureUrl = user.profileImageUrl,
             bannerUrl = user.bannerUrl,

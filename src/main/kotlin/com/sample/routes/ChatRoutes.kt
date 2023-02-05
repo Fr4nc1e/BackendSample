@@ -95,7 +95,6 @@ fun Route.chatWebSocket(chatController: ChatController) {
                                     ownUserId = call.userId,
                                     chatController = chatController,
                                     type = type,
-                                    frameText = frameText,
                                     json = json
                                 )
                             }
@@ -117,7 +116,6 @@ suspend fun handleWebSocket(
     ownUserId: String,
     chatController: ChatController,
     type: Int,
-    frameText: String,
     json: String
 ) {
     val gson by inject<Gson>(Gson::class.java)

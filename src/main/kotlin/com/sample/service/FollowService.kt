@@ -21,10 +21,10 @@ class FollowService(
         followingUserId = followingUserId,
         followedUserId = request.followedUserId
     )
-    suspend fun getFollowedUsers(userId: String): List<UserResponseItem> {
-        return followRepository.getFollowedUsers(userId).map { user ->
-            val isFollowing = followRepository
-                .getFollowsByUser(userId).find {
+    suspend fun getFollowings(userId: String): List<UserResponseItem> {
+        return followRepository.getFollowings(userId).map { user ->
+            val isFollowing = followRepository.getFollowsByUser(userId)
+                .find {
                     it.followedUserId == user.id
                 } != null
 
@@ -38,10 +38,10 @@ class FollowService(
         }
     }
 
-    suspend fun getFollowingUsers(userId: String): List<UserResponseItem> {
-        return followRepository.getFollowingUsers(userId).map { user ->
-            val isFollowing = followRepository
-                .getFollowsByUser(userId).find {
+    suspend fun getFollowers(userId: String): List<UserResponseItem> {
+        return followRepository.getFollowers(userId).map { user ->
+            val isFollowing = followRepository.getFollowsByUser(userId)
+                .find {
                     it.followedUserId == user.id
                 } != null
 
