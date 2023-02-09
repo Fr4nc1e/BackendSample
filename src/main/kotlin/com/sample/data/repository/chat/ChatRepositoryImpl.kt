@@ -116,9 +116,14 @@ class ChatRepositoryImpl(
         chatId: String,
         lastMessageId: String
     ) {
+        val message = messages.findOneById(lastMessageId)
         chats.updateOneById(
             id = chatId,
-            update = setValue(Chat::lastMessageId, lastMessageId)
+            update = setValue(Chat::lastMessageId, message?.id)
+        )
+        chats.updateOneById(
+            id = chatId,
+            update = setValue(Chat::timestamp, message?.timestamp)
         )
     }
 }
