@@ -96,6 +96,22 @@ class ChatRepositoryImpl(
         ).first() != null
     }
 
+    override suspend fun returnUsersChatChannel(
+        userId1: String,
+        userId2: String
+    ): String? {
+        return if (doesChatWithUsersExist(userId1, userId2)) {
+            chats.find(
+                and(
+                    Chat::userIds contains userId1,
+                    Chat::userIds contains userId2
+                )
+            ).first()?.id
+        } else {
+            null
+        }
+    }
+
     override suspend fun updateLastMessageIdForChat(
         chatId: String,
         lastMessageId: String

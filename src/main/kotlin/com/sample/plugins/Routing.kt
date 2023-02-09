@@ -84,6 +84,7 @@ fun Application.configureRouting() {
         getMessagesForChat(chatService)
         getChatsForUser(chatService)
         chatWebSocket(chatController)
+        getChatChannel(chatService)
 
         static {
             resources("static")

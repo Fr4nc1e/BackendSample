@@ -32,4 +32,14 @@ class ChatService(
             chatId = chatId
         )
     }
+
+    suspend fun returnUsersChatChannel(
+        userId1: String,
+        userId2: String
+    ): String? {
+        return chatRepository.returnUsersChatChannel(
+            userId1 = userId1,
+            userId2 = userId2
+        )
+    }
 }

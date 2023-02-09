@@ -32,6 +32,11 @@ interface ChatRepository {
         userId2: String
     ): Boolean
 
+    suspend fun returnUsersChatChannel(
+        userId1: String,
+        userId2: String
+    ): String?
+
     suspend fun updateLastMessageIdForChat(
         chatId: String,
         lastMessageId: String
