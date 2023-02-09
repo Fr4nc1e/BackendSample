@@ -49,12 +49,13 @@ class ChatController(
         if (!repository.doesChatWithUsersExist(ownUserId, message.toId)) {
             val chatId = repository.insertChat(ownUserId, message.toId, messageEntity.id)
             repository.insertMessage(messageEntity.copy(chatId = chatId))
-            return
+        } else {
+            repository.insertMessage(messageEntity)
+            message.chatId?.let {
+                repository.updateLastMessageIdForChat(message.chatId, messageEntity.id)
+            }
         }
 
-        repository.insertMessage(messageEntity)
-        message.chatId?.let {
-            repository.updateLastMessageIdForChat(message.chatId, messageEntity.id)
-        }
+
     }
 }
