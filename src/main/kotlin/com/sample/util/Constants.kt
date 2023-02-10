@@ -14,8 +14,8 @@ object Constants {
     const val MAX_COMMENT_LENGTH = 2000
 
     // Url and File Path
-//    const val BASE_URL = "http://47.115.229.205:8081/"
-    const val BASE_URL = "http://172.28.211.51:8081/"
+    const val BASE_URL = "http://47.115.229.205:8081/"
+//    const val BASE_URL = "http://172.28.211.51:8081/"
     const val PROFILE_PICTURE_PATH = "build/resources/main/static/profile_pictures/"
     const val BANNER_IMAGE_PATH = "build/resources/main/static/banner_images/"
     const val POST_CONTENT_PATH = "build/resources/main/static/post_contents/"
