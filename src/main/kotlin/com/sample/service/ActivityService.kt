@@ -4,7 +4,7 @@ import com.sample.data.models.Activity
 import com.sample.data.repository.activity.ActivityRepository
 import com.sample.data.repository.comment.CommentRepository
 import com.sample.data.repository.post.PostRepository
-import com.sample.data.responses.ActivityResponse
+import com.sample.data.responses.activity.ActivityResponse
 import com.sample.data.util.ActivityType
 import com.sample.data.util.ParentType
 import com.sample.util.Constants

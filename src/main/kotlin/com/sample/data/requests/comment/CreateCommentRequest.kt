@@ -1,4 +1,4 @@
-package com.sample.data.requests
+package com.sample.data.requests.comment
 
 import kotlinx.serialization.Serializable
 

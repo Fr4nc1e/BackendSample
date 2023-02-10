@@ -47,8 +47,11 @@ dependencies {
     implementation("io.ktor:ktor-server-call-logging-jvm:2.2.3")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:2.2.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.2.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.3")
     implementation("io.ktor:ktor-server-netty-jvm:2.2.3")
     implementation("io.ktor:ktor-server-sessions-jvm:2.2.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.3")
+    implementation("io.ktor:ktor-serialization-jackson:2.2.3")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     // KMongo
@@ -58,6 +61,7 @@ dependencies {
     // Koin core features
     implementation("io.insert-koin:koin-core:$koin_version")
     implementation("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.ktor:ktor-client-cio:2.2.3")
     implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 
     // Test dependencies

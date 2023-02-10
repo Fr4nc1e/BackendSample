@@ -2,8 +2,8 @@ package com.sample.service
 
 import com.sample.data.models.Post
 import com.sample.data.repository.post.PostRepository
-import com.sample.data.requests.CreatePostRequest
-import com.sample.data.responses.PostResponse
+import com.sample.data.requests.post.CreatePostRequest
+import com.sample.data.responses.post.PostResponse
 import com.sample.util.Constants
 
 class PostService(

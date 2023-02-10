@@ -18,6 +18,7 @@ fun Application.configureRouting() {
     val activityService: ActivityService by inject()
     val chatService: ChatService by inject()
     val chatController: ChatController by inject()
+    val notificationService: NotificationService by inject()
     val jwtIssuer = environment.config.property("jwt.domain").getString()
     val jwtAudience = environment.config.property("jwt.audience").getString()
     val jwtSecret = environment.config.property("jwt.secret").getString()
@@ -85,6 +86,12 @@ fun Application.configureRouting() {
         getChatsForUser(chatService)
         chatWebSocket(chatController)
         getChatChannel(chatService)
+
+        // Notification Route
+        sendPostNotification(
+            notificationService,
+            followService
+        )
 
         static {
             resources("static")

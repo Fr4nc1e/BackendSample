@@ -2,7 +2,7 @@ package com.sample.data.repository.activity
 
 import com.sample.data.models.Activity
 import com.sample.data.models.User
-import com.sample.data.responses.ActivityResponse
+import com.sample.data.responses.activity.ActivityResponse
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
 

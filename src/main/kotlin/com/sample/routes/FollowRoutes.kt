@@ -1,7 +1,7 @@
 package com.sample.routes
 
 import com.sample.data.models.Activity
-import com.sample.data.requests.FollowUpdateRequest
+import com.sample.data.requests.follow.FollowUpdateRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.data.util.ActivityType
 import com.sample.routes.util.userId
@@ -97,15 +97,11 @@ fun Route.getFollowers(
 ) {
     authenticate {
         get("/api/follow/users/followers") {
-            // Get the userId from QueryParams.PARAM_USER_ID.
-            // If not provided, fall back to call.userId
             val userId = call.parameters[QueryParams.PARAM_USER_ID] ?: call.userId
-             // Call the followService to get the list of followers
             val users = followService.getFollowers(
                 ownUserId = call.userId,
                 userId = userId
             )
-             // Respond OK with a BasicApiResponse containing the list of followers
             call.respond(
                 HttpStatusCode.OK,
                 BasicApiResponse(

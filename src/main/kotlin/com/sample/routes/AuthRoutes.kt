@@ -2,9 +2,9 @@ package com.sample.routes
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.sample.data.requests.CreateAccountRequest
-import com.sample.data.requests.LoginRequest
-import com.sample.data.responses.AuthResponse
+import com.sample.data.requests.user.CreateAccountRequest
+import com.sample.data.requests.user.LoginRequest
+import com.sample.data.responses.user.AuthResponse
 import com.sample.data.responses.BasicApiResponse
 import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages

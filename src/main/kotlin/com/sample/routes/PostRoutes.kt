@@ -1,7 +1,7 @@
 package com.sample.routes
 
 import com.google.gson.Gson
-import com.sample.data.requests.CreatePostRequest
+import com.sample.data.requests.post.CreatePostRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.routes.util.userId
 import com.sample.service.CommentService

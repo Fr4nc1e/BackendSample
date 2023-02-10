@@ -1,6 +1,6 @@
 package com.sample.data.models
 
-import com.sample.data.responses.CommentResponse
+import com.sample.data.responses.comment.CommentResponse
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId

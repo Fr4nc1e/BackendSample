@@ -3,7 +3,7 @@ package com.sample.data.repository.chat
 import com.sample.data.models.Chat
 import com.sample.data.models.Message
 import com.sample.data.models.User
-import com.sample.data.responses.ChatResponse
+import com.sample.data.responses.chat.ChatResponse
 import org.litote.kmongo.and
 import org.litote.kmongo.contains
 import org.litote.kmongo.coroutine.CoroutineDatabase

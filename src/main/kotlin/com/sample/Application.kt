@@ -12,6 +12,7 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
+    configureSerialization()
     install(Koin) {
         slf4jLogger()
         modules(mainModule)
@@ -20,6 +21,5 @@ fun Application.module() {
     configureSockets()
     configureHTTP()
     configureMonitoring()
-    configureSerialization()
     configureRouting()
 }

@@ -3,10 +3,10 @@ package com.sample.service
 import com.sample.data.models.User
 import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.repository.user.UserRepository
-import com.sample.data.requests.CreateAccountRequest
-import com.sample.data.requests.UpdateProfileRequest
-import com.sample.data.responses.ProfileResponse
-import com.sample.data.responses.UserResponseItem
+import com.sample.data.requests.user.CreateAccountRequest
+import com.sample.data.requests.user.UpdateProfileRequest
+import com.sample.data.responses.user.ProfileResponse
+import com.sample.data.responses.user.UserResponseItem
 import com.sample.util.Constants
 
 class UserService(

@@ -2,7 +2,7 @@ package com.sample.service.chat
 
 import com.sample.data.models.Message
 import com.sample.data.repository.chat.ChatRepository
-import com.sample.data.responses.ChatResponse
+import com.sample.data.responses.chat.ChatResponse
 
 class ChatService(
     private val chatRepository: ChatRepository

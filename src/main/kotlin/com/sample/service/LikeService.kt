@@ -3,7 +3,7 @@ package com.sample.service
 import com.sample.data.repository.follow.FollowRepository
 import com.sample.data.repository.like.LikeRepository
 import com.sample.data.repository.user.UserRepository
-import com.sample.data.responses.UserResponseItem
+import com.sample.data.responses.user.UserResponseItem
 
 class LikeService(
     private val likeRepository: LikeRepository,

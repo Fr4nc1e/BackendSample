@@ -1,9 +1,9 @@
 package com.sample.routes
 
 import com.google.gson.Gson
-import com.sample.data.requests.UpdateProfileRequest
+import com.sample.data.requests.user.UpdateProfileRequest
 import com.sample.data.responses.BasicApiResponse
-import com.sample.data.responses.UserResponseItem
+import com.sample.data.responses.user.UserResponseItem
 import com.sample.routes.util.userId
 import com.sample.service.UserService
 import com.sample.util.ApiResponseMessages

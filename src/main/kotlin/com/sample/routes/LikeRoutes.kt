@@ -1,6 +1,6 @@
 package com.sample.routes
 
-import com.sample.data.requests.LikeUpdateRequest
+import com.sample.data.requests.like.LikeUpdateRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.data.util.ParentType
 import com.sample.routes.util.userId

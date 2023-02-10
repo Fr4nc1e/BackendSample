@@ -4,7 +4,7 @@ import com.sample.data.models.Following
 import com.sample.data.models.Like
 import com.sample.data.models.Post
 import com.sample.data.models.User
-import com.sample.data.responses.PostResponse
+import com.sample.data.responses.post.PostResponse
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
 

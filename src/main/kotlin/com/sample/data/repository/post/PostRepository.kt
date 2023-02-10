@@ -1,7 +1,7 @@
 package com.sample.data.repository.post
 
 import com.sample.data.models.Post
-import com.sample.data.responses.PostResponse
+import com.sample.data.responses.post.PostResponse
 import com.sample.util.Constants
 
 interface PostRepository {

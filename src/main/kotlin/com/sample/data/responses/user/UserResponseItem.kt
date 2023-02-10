@@ -1,4 +1,4 @@
-package com.sample.data.responses
+package com.sample.data.responses.user
 
 import kotlinx.serialization.Serializable
 

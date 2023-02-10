@@ -1,7 +1,7 @@
 package com.sample.data.repository.chat
 
 import com.sample.data.models.Message
-import com.sample.data.responses.ChatResponse
+import com.sample.data.responses.chat.ChatResponse
 
 interface ChatRepository {
     suspend fun getMessagesForChat(

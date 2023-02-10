@@ -1,7 +1,7 @@
 package com.sample.data.repository.user
 
 import com.sample.data.models.User
-import com.sample.data.requests.UpdateProfileRequest
+import com.sample.data.requests.user.UpdateProfileRequest
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
 

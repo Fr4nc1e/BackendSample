@@ -3,8 +3,8 @@ package com.sample.service
 import com.sample.data.models.Comment
 import com.sample.data.repository.comment.CommentRepository
 import com.sample.data.repository.user.UserRepository
-import com.sample.data.requests.CreateCommentRequest
-import com.sample.data.responses.CommentResponse
+import com.sample.data.requests.comment.CreateCommentRequest
+import com.sample.data.responses.comment.CommentResponse
 import com.sample.util.Constants
 
 class CommentService(

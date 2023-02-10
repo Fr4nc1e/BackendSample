@@ -1,8 +1,8 @@
 package com.sample.service
 
 import com.sample.data.repository.follow.FollowRepository
-import com.sample.data.requests.FollowUpdateRequest
-import com.sample.data.responses.UserResponseItem
+import com.sample.data.requests.follow.FollowUpdateRequest
+import com.sample.data.responses.user.UserResponseItem
 
 class FollowService(
     private val followRepository: FollowRepository,

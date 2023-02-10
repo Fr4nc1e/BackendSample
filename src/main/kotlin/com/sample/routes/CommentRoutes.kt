@@ -1,7 +1,7 @@
 package com.sample.routes
 
-import com.sample.data.requests.CreateCommentRequest
-import com.sample.data.requests.DeleteCommentRequest
+import com.sample.data.requests.comment.CreateCommentRequest
+import com.sample.data.requests.comment.DeleteCommentRequest
 import com.sample.data.responses.BasicApiResponse
 import com.sample.routes.util.userId
 import com.sample.service.ActivityService

@@ -1,7 +1,7 @@
 package com.sample.data.repository.comment
 
 import com.sample.data.models.Comment
-import com.sample.data.responses.CommentResponse
+import com.sample.data.responses.comment.CommentResponse
 
 interface CommentRepository {
 
