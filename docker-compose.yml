@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: mongodb-container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
+
+  ktor:
+    build: .
+    image: fr4nc1e/block-backend:0.0.4
+    restart: always
+    container_name: block-backend-container
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+      MONGODB_HOST: mongodb
+      MONGODB_URI: mongodb+srv://admin:admin@cluster0.i7nzu4x.mongodb.net/?retryWrites=true&w=majority
+      DB_NAME: sample_backend
+      NAME: FrancleDB
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb: {}

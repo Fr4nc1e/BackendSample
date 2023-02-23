@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val ktor_version: String by project
@@ -16,7 +15,7 @@ plugins {
 }
 
 group = "com.sample"
-version = "0.0.1"
+version = "0.0.2"
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
     project.setProperty("mainClassName", mainClass.get())
@@ -28,12 +27,6 @@ application {
 repositories {
     mavenCentral()
     gradlePluginPortal()
-}
-
-ktor {
-    fatJar {
-        archiveFileName.set("app-service.jar")
-    }
 }
 
 dependencies {
@@ -86,11 +79,16 @@ compileTestKotlin.kotlinOptions {
     jvmTarget = "1.8"
 }
 
-tasks.withType<ShadowJar> {
-    manifest {
-        attributes(
-            "Main-Class" to application.mainClass.get()
-        )
-        archiveFileName.set("app-service.jar")
+tasks {
+    shadowJar {
+        manifest {
+            attributes(Pair("Main-Class", "com.sample.ApplicationKt"))
+        }
+    }
+}
+
+ktor {
+    fatJar {
+        archiveFileName.set("app-backend-$version-all.jar")
     }
 }

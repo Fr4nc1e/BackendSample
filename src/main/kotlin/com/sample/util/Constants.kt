@@ -15,10 +15,13 @@ object Constants {
 
     // Url and File Path
     const val BASE_URL = "http://47.115.229.205:8081/"
-//    const val BASE_URL = "http://172.28.211.51:8081/"
+//    const val BASE_URL = "http://172.28.188.188:8081/"
     const val PROFILE_PICTURE_PATH = "build/resources/main/static/profile_pictures/"
     const val BANNER_IMAGE_PATH = "build/resources/main/static/banner_images/"
     const val POST_CONTENT_PATH = "build/resources/main/static/post_contents/"
+//    const val PROFILE_PICTURE_PATH = "root/app/profile_pictures/"
+//    const val BANNER_IMAGE_PATH = "root/app/banner_images/"
+//    const val POST_CONTENT_PATH = "root/app/post_contents/"
     const val DEFAULT_PROFILE_PICTURE_PATH = "${BASE_URL}profile_pictures/bot.png"
     const val DEFAULT_BANNER_IMAGE_PATH = "${BASE_URL}profile_pictures/bot.png"
 
